@@ -21,7 +21,7 @@ void handleQueue(struct beginPro* loc)
         // find first available slot
         while(i < THEQUEUE_SIZE)
         {
-                if (thequeue[i] == NULL)
+                if (checkNull(thequeue[i]))
                 {
                         thequeue[i] = loc;
                         displayProStart(thequeue[i], i);
@@ -38,7 +38,7 @@ void checkQueue()
         int i = 0;
         while(i < THEQUEUE_SIZE)
         {
-                if (thequeue[i] != NULL)
+                if (!checkNull(thequeue[i]))
                 {
                         if (checkPro(thequeue[i]))
                         {
@@ -58,7 +58,7 @@ void exitQueue()
                 int i = 0;
                 while(i < THEQUEUE_SIZE)
                 {
-                        if (thequeue[i] != NULL)
+                        if (!checkNull(thequeue[i]))
                         {
                                 run = 1;
                                 break;
@@ -80,7 +80,7 @@ void remPro(int ind)
 {
         if (ind >= 0 && ind < THEQUEUE_SIZE)
         {
-                if (thequeue[ind] != NULL)
+                if (!checkNull(thequeue[ind]))
                 {
                         displayProStart(thequeue[ind], ind);
                         spacePro(thequeue[ind]);
@@ -142,7 +142,7 @@ int checkPro(struct beginPro* pro)
 
 void displayProStart(const struct beginPro* pro, int loc)
 {
-        if (pro != NULL)
+        if (!checkNull(pro))
         {
                 if (pro->second != -1)
                 {
@@ -157,8 +157,17 @@ void displayProStart(const struct beginPro* pro, int loc)
 
 void displayProDone(const struct beginPro* pro, int loc)
 {
-        if (pro != NULL)
+        if (!checkNull(pro))
         {
                 printf("[%i]+\t[%s]\n", loc, pro->do);
         }
+}
+
+bool checkNull(const struct beginPro* tocheck)
+{
+
+        if(tocheck == NULL)
+                return true;
+        else
+                return false;
 }
