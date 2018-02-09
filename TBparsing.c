@@ -221,50 +221,44 @@ char** Expand(char** args)       //ExpandVariables
 	size_t arg_it = 0;    //argument iterator
 	size_t str_it = 0;     //string iterator
 	//char* str = args[arg_it];
-
 	while (args[arg_it] != NULL)
 	{
 		char c = args[arg_it][str_it];
 		while (c != '\0')    //while the character doesnt equal null
 		{
-			if (c == '$')
+			if (c == '$')     
 			{
-				char* env_var = (char*)calloc(2, sizeof(char));
-				size_t count = 1;
+				char* environment_v = (char*)calloc(2, sizeof(char));     //env_var
+				size_t counter = 1;     //count
 				c = args[arg_it][++str_it];
 				if (c == '\0' || c == '$')
 				{
-					free(env_var);
-					// $ at end of string
-					// or two $ in a row
+					free(environment_v);    //$ at end of string or two $ in a row
 					break;
 				}
-				env_var[0] = c;
-				env_var[1] = '\0';
+				environment_v[0] = c;
+				environment_v[1] = '\0';
 				c = args[arg_it][++str_it];
-				while (c != '/' && c != '\0' && c != '$')
+				while (c != '$' && c != '\0' && c != '/')
 				{
-					env_var = BPushString(env_var, c);
+					environment_v = BPushString(environment_var, c);   /////////////////
 					c = args[arg_it][++str_it];
-					count++;
+					counter++;
 				}
-				char* ret_env = getenv(env_var);
-				if (ret_env == NULL)
+				char* retrn_environment = getenv(environment_v);    //ret_env  //////////////////////////getenv(env_var)
+				if (retrn_environment == NULL)
 				{
-					free(env_var);
-					// invalid env variable
+					free(environment_v);   // invalid env variable
 					break;
 				}
-				args[arg_it] = CharRep(args[arg_it], str_it - count - 1, str_it - 1, ret_env);
-				// must update iterator since string was changed
-				str_it = str_it + strlen(env_var);
-				free(env_var);
+				args[arg_it] = CharRep(args[arg_it], str_it - counter - 1, str_it - 1, retrn_environment);////////////
+				str_it = str_it + strlen(environment_v);   //update iterator since string changed  //must update iterator since string was changed
+				free(environment_v);
 			}
 			c = args[arg_it][++str_it];
 		}
 		str_it = 0;
 		++arg_it;
 	}
-
 	return args;
 }
