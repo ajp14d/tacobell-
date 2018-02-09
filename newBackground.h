@@ -31,7 +31,7 @@ void checkQueue();
 
 void exitQueue();
 
-void remPro(int i);
+void remPro(int ind);
 
 struct beginPro* newPro(int firstpid, int secondpid,
         char* do);
