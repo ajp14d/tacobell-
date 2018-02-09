@@ -26,7 +26,7 @@ char* PWhitespace(char* line)                    //ParseWhitespace
 		wspace_count++;
 	}
 	if (cnt > 0)    //if cnt index is more than 0
-		line = DelFunc(line, cnt - wspace_count, cnt - 1);              ////////////////////////////////////////
+		line = DelFunc(line, cnt - wspace_count, cnt - 1);         
 	
 	// check for empty string
 	//if (strcmp(line,"") == 0)
@@ -55,7 +55,7 @@ char* PWhitespace(char* line)                    //ParseWhitespace
 		if (trailing_wspace == 1)   //if there is trailing whitespace
 		{
 			if (wspace_count > 0)   //if that whitespace is greater than 0
-				line = DelFunc(line, cnt - wspace_count - 1, cnt - 2);     ///////////////////////////////
+				line = DelFunc(line, cnt - wspace_count - 1, cnt - 2);     
 			break;
 		}
 		else if (wspace_count > 1)
@@ -142,7 +142,7 @@ char** PathResolve(char** args)           //ResolvePaths
 		//printf("%s	%i\n", args[arg_it], cur_type);  
 		if (new_cmnd == 1)
 		{
-			cmnd_type = CmdCheck(args, arg_it);  ////////////////////
+			cmnd_type = CmdCheck(args, arg_it); 
 			current_cmnd = args[arg_it];
 			cmnd_it = arg_it;
 			new_cmnd = 0;
@@ -162,23 +162,23 @@ char** PathResolve(char** args)           //ResolvePaths
 		{
 			if (arg_it == (cmnd_it + 1))
 			{
-				if (!CharCheck(args[arg_it], '/'))   /////////////////////////////////////
+				if (!CharCheck(args[arg_it], '/'))   
 				{
-					if (!CharCheck(args[arg_it], '~') && !CharCheck(args[arg_it], '.'))//////////////////////////
+					if (!CharCheck(args[arg_it], '~') && !CharCheck(args[arg_it], '.'))
 					{
-						args[arg_it] = FPushString(args[arg_it], '/');/////////////////
-						args[arg_it] = FPushString(args[arg_it], '.');/////////////////
+						args[arg_it] = FPushString(args[arg_it], '/');
+						args[arg_it] = FPushString(args[arg_it], '.');
 					}
 				}
 				else
 				{
 					if (args[arg_it][0] != '.' && args[arg_it][0] != '~' && args[arg_it][0] != '/')
 					{
-						args[arg_it] = FPushString(args[arg_it], '/');///////////////////
-						args[arg_it] = FPushString(args[arg_it], '.');///////////////////
+						args[arg_it] = FPushString(args[arg_it], '/');
+						args[arg_it] = FPushString(args[arg_it], '.');
 					}
 				}
-				args[arg_it] = PathMaker(args[arg_it]);     ////////////////////////
+				args[arg_it] = PathMaker(args[arg_it]);   
 			}
 		}
 
@@ -189,10 +189,10 @@ char** PathResolve(char** args)           //ResolvePaths
 			{
 				if (arg_it == (cmnd_it + 1))
 				{
-					if (CharCheck(args[arg_it], '/') == 1)///////////////////////////
-						args[arg_it] = PathMaker(args[arg_it]);//////////////////
+					if (CharCheck(args[arg_it], '/') == 1)
+						args[arg_it] = PathMaker(args[arg_it]);
 					else
-						args[arg_it] = PathFromEVar(args[arg_it]);///////////////////
+						args[arg_it] = PathFromEVar(args[arg_it]);
 
 					//args[arg_it] = BuildPath(args[arg_it]);
 				}
@@ -204,10 +204,10 @@ char** PathResolve(char** args)           //ResolvePaths
 		{
 			if (arg_it == cmnd_it)
 			{
-				if (CharCheck(args[arg_it], '/') == 1)//////////////////
-					args[arg_it] = PathMaker(args[arg_it]);//////////////////
+				if (CharCheck(args[arg_it], '/') == 1)
+					args[arg_it] = PathMaker(args[arg_it]);
 				else
-					args[arg_it] = PathFromEVar(args[arg_it]);///////////////////////
+					args[arg_it] = PathFromEVar(args[arg_it]);
 			}
 		}
 		++arg_it;
@@ -244,13 +244,13 @@ char** Expand(char** args)       //ExpandVariables
 					c = args[arg_it][++str_it];
 					counter++;
 				}
-				char* retrn_environment = getenv(environment_v);    //ret_env  //////////////////////////getenv(env_var)
+				char* retrn_environment = getenv(environment_v);    //ret_env  getenv(env_var)
 				if (retrn_environment == NULL)
 				{
 					free(environment_v);   // invalid env variable
 					break;
 				}
-				args[arg_it] = CharRep(args[arg_it], str_it - counter - 1, str_it - 1, retrn_environment);////////////
+				args[arg_it] = CharRep(args[arg_it], str_it - counter - 1, str_it - 1, retrn_environment);
 				str_it = str_it + strlen(environment_v);   //update iterator since string changed  //must update iterator since string was changed
 				free(environment_v);
 			}
