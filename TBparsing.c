@@ -37,61 +37,55 @@ char** ParseI(char* input)                           //ParseInput
 
 char* PWhitespace(char* line)                    //ParseWhitespace
 {
-  int wspace_count = 0;      //whitespace_count
-	size_t that = 0;       //it = 0
-	char current_char = line[that];     //cur_char
+  	int wspace_count = 0;      //whitespace_count
+	size_t cnt = 0;       //count iterator
+	char current_char = line[cnt];     //cur_char
 	
-	// delete leading whitespace
-	while (cur_char != '\0' && (cur_char == ' ' || cur_char == '\t' || cur_char == '\n'))
-	{
-		cur_char = line[++it];
-		whitespace_count++;
+	while (current_char != '\0' && (current_char == '\t ' || current_char == '\n' || current_char == ' '))  // delete leading whitespace
+	{    //while the current char isnt null, a tab, a newline, or a space
+		current_char = line[++cnt];
+		wspace_count++;
 	}
-	if (it > 0)
-		line = DelFunc(line, it-whitespace_count, it-1);
+	if (cnt > 0)    //if cnt index is more than 0
+		line = DelFunc(line, cnt - wspace_count, cnt - 1);              ////////////////////////////////////////
 	
 	// check for empty string
-	//if (strcmp(line,"")==0)
+	//if (strcmp(line,"") == 0)
 	//	return line;
-	
 	// debug message
-	/*printf("Made it through leading whitespace and deleted %i characters...\n",
-		whitespace_count);
+	/*printf("Made it through leading whitespace and deleted %i characters...\n", wspace_count);
 	printf(line);
 	printf("\n");*/
 	
-	it = 0;
-	whitespace_count = 0;
+	cnt = 0;
+	wspace_count = 0;
 	
-	// need flag to determine if currently operating on
-	// trailing whitespace
-	int contains_trailing = 0;
-	// delete intermediate extra whitespace
-	while (cur_char != '\0')
-	{
-		cur_char = line[it++];
-		while (cur_char == ' ' || cur_char == '\t' || cur_char == '\n')
+	//flag to tell us if there is any trailing whitespace      //need flag to determine if currently operating on trailing whitespace
+	int trailing_wspace = 0;                //contains_trailing
+	
+	while (current_char != '\0')     //delete intermediate extra whitespace
+	{        //while the current char isnt being null terminated 
+		current_char = line[cnt++];
+		while (current_char == '\n' || current_char == '\t' || current_char == ' ')
 		{
-			whitespace_count++;
-			cur_char = line[it++];
-			if (cur_char == '\0')
-				contains_trailing = 1;
+			current_char = line[cnt++];
+			wspace_count++;
+			if (current_char == '\0')
+				trailing_wspace = 1;
 		}
-		if (contains_trailing == 1)
+		if (trailing_wspace == 1)   //if there is trailing whitespace
 		{
-			if (whitespace_count > 0)
-			{
-				line = DelFunc(line, it-whitespace_count-1, it-2);
-			}
+			if (wspace_count > 0)   //if that whitespace is greater than 0
+				line = DelFunc(line, cnt - wspace_count - 1, cnt - 2);     ///////////////////////////////
 			break;
 		}
-		else if (whitespace_count > 1)
+		else if (wspace_count > 1)
 		{
-			line = DelFunc(line, it-whitespace_count-1, it-3);
+			line = DelFunc(line, cnt - wspace_count - 1, cnt - 3);
 			// must update iterator if array is changed through deletion
-			it = it - (whitespace_count - 1);
+			cnt = cnt - (wspace_count - 1);
 		}
-		whitespace_count = 0;
+		wspace_count = 0;
 	}
 	
 	// debug message
