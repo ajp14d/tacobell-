@@ -136,29 +136,9 @@ char** PathResolve(char** args)           //ResolvePaths
 	//int cur_type;		// current type of args[arg_it]				[FIXED COMPILER WARNING UNUSED VAR]	
 	char* current_cmnd = args[0];     //cur_cmd
 
-	while(args[arg_it] != NULL)
-	{
-		//cur_type = IsCommand(args,arg_it);						[FIXED COMPILER WARNING UNUSED VAR]
-		//printf("%s	%i\n", args[arg_it], cur_type);  
-		if (new_cmnd == 1)
-		{
-			cmnd_type = CmdCheck(args, arg_it); 
-			current_cmnd = args[arg_it];
-			cmnd_it = arg_it;
-			new_cmnd = 0;
-		}
-		else
-		{
-			if ((strcmp(args[arg_it], "<") == 0) || (strcmp(args[arg_it], ">") == 0) || (strcmp(args[arg_it], "|") == 0))
-			{
-				new_cmnd = 1;
-				++arg_it;
-				continue;
-			}
-		}
-		
-		// cd
-		if (cmnd_type == 2)    //if the command is cd
+	do 
+	{          // cd
+		if (cmnd_type == 1)    //if the command is cd
 		{
 			if (arg_it == (cmnd_it + 1))
 			{
@@ -181,7 +161,27 @@ char** PathResolve(char** args)           //ResolvePaths
 				args[arg_it] = PathMaker(args[arg_it]);   
 			}
 		}
-
+		
+		
+		//cur_type = IsCommand(args,arg_it);						[FIXED COMPILER WARNING UNUSED VAR]
+		//printf("%s	%i\n", args[arg_it], cur_type);  
+		else if (new_cmnd == 2)
+		{
+			cmnd_type = CmdCheck(args, arg_it); 
+			current_cmnd = args[arg_it];
+			cmnd_it = arg_it;
+			new_cmnd = 0;
+		}
+		else
+		{
+			if ((strcmp(args[arg_it], "<") == 0) || (strcmp(args[arg_it], ">") == 0) || (strcmp(args[arg_it], "|") == 0))
+			{
+				new_cmnd = 1;
+				++arg_it;
+				continue;
+			}
+		}
+		
 		// etime and limits
 		else if (cmnd_type == 3)    //if the command chosen is etime or limits
 		{
@@ -211,7 +211,7 @@ char** PathResolve(char** args)           //ResolvePaths
 			}
 		}
 		++arg_it;
-	}
+	}while(args[arg_it] != NULL);
 	return args;
 }
 
@@ -251,8 +251,7 @@ char** Expand(char** args)       //ExpandVariables
 					break;
 				}
 				args[arg_it] = CharRep(args[arg_it], str_it - counter - 1, str_it - 1, retrn_environment);
-				str_it = str_it + strlen(environment_v);   //update iterator since string changed  //must update iterator since string was changed
-				free(environment_v);
+				str_it = str_it + strlen(environment_v);   //update iterator since string changed  				free(environment_v);
 			}
 			c = args[arg_it][++str_it];
 		}
