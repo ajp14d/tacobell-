@@ -9,38 +9,38 @@
 struct beginPro
 {
         // pid for first command
-        int pid_1;
+        int pid_first;
         // if there is redirection, this contains
         // the pid for the second command
         // if not, this assumes the value -1
-        int pid_2;
+        int pid_second;
         // the cmd used to spawn the process
-        char* cmd;
+        char* do;
 };
 
 // global process queue
-#define PQUEUE_SIZE 256
-struct beginPro* process_queue[PQUEUE_SIZE];
+#define THEQUEUE_SIZE 256
+struct beginPro* thequeue[THEQUEUE_SIZE];
 
 void Init();
 
-void handleQueue(struct beginPro* p);
+void handleQueue(struct beginPro* loc);
 
 void checkQueue();
 
 void exitQueue();
 
-void remPro(int index);
+void remPro(int i);
 
-struct beginPro* newPro(int pid_1, int pid_2,
-        char* cmd);
+struct beginPro* newPro(int pid_first, int pid_second,
+        char* do);
 
-void spacePro(struct beginPro* p);
+void spacePro(struct beginPro* pro);
 
-int checkPro(struct beginPro* p);
+int checkPro(struct beginPro* pro);
 
-void displayProStart(const struct beginPro* p, int pos);
+void displayProStart(const struct beginPro* pro, int loc);
 
-void displayProDone(const struct beginPro* p, int pos);
+void displayProDone(const struct beginPro* pro, int loc);
 
 #endif
