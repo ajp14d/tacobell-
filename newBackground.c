@@ -78,8 +78,9 @@ void exitQueue()
 
 void remPro(int ind)
 {
-        if (ind >= 0 && ind < THEQUEUE_SIZE)
+        if (ind >= 0)
         {
+          if (ind < THEQUEUE_SIZE)
                 if (!checkNull(thequeue[ind]))
                 {
                         displayProStart(thequeue[ind], ind);
