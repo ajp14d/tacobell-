@@ -9,11 +9,11 @@
 struct beginPro
 {
         // pid for first command
-        int pid_first;
+        int firstpid;
         // if there is redirection, this contains
         // the pid for the second command
         // if not, this assumes the value -1
-        int pid_second;
+        int secondpid;
         // the cmd used to spawn the process
         char* do;
 };
@@ -32,7 +32,7 @@ void exitQueue();
 
 void remPro(int i);
 
-struct beginPro* newPro(int pid_first, int pid_second,
+struct beginPro* newPro(int firstpid, int secondpid,
         char* do);
 
 void spacePro(struct beginPro* pro);
