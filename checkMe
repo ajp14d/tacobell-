@@ -44,3 +44,12 @@ ArrayRemoveElement --> char** RemoveArr(char** argv, int a);
 ArgvToString --> char* Convert(char** argv);
 
 ArgvCountSymbol --> int CountStr(char** argv, const char* s);
+
+pipe.c changed, to test pipe instead of the current TestOnePipe function, test using a while loop: 
+while (args[i] != NULL){
+			// If '|' is detected, piping was solicited, and we call
+			// the appropriate method that will handle the different
+			// executions
+		if (strcmp(args[i],"|") == 0){
+				pipe(args);
+				return 1;
