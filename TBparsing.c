@@ -14,27 +14,6 @@ char* GetInput()                         //char* ReadInput()
 		return NULL;
 }
 
-char** ParseI(char* input)                           //ParseInput
-{                                               //seperates and stores the values
-	input = PWhitespace(input);       //ParseWhitespace
-	char** split_arg = PArguments(input);            //split_args
-	
-	if(split_arg[0] != NULL)          //if '&' is in front remove it         //check for leading '&' and remove if present
-	{
-		if(strcmp(split_arg[0], "&") == 0)
-			split_arg = RemoveArr(split_arg, 0);
-	}
-	
-	split_arg = Expand(split_arg);           //ExpandVariables
-	split_arg = PathResolve(split_arg);             //ResolvePaths
-	
-	// debug message
-	//DisplayArgs(char** args);      //PrintArgVector(split_arg);        //////////////////
-  
-	free(input);    //free the input 
-	return split_arg;      //return the newly parsed argument 
-}
-
 char* PWhitespace(char* line)                    //ParseWhitespace
 {
   	int wspace_count = 0;      //whitespace_count
@@ -86,7 +65,6 @@ char* PWhitespace(char* line)                    //ParseWhitespace
 		}
 		wspace_count = 0;   //set white space counter back to 0
 	}
-	
 	// debug message
 	/*printf("Made it through intermediate whitespace...\n", wspace_count);
 	printf(line);
@@ -97,6 +75,27 @@ char* PWhitespace(char* line)                    //ParseWhitespace
 	// current guess is somewhere writing over the return address
 	// (buffer overflow)
 	return line;
+}
+	
+char** ParseI(char* input)                           //ParseInput
+{                                               //seperates and stores the values
+	input = PWhitespace(input);       //ParseWhitespace
+	char** split_arg = PArguments(input);            //split_args
+	
+	if(split_arg[0] != NULL)          //if '&' is in front remove it         //check for leading '&' and remove if present
+	{
+		if(strcmp(split_arg[0], "&") == 0)
+			split_arg = RemoveArr(split_arg, 0);
+	}
+	
+	split_arg = Expand(split_arg);           //ExpandVariables
+	split_arg = PathResolve(split_arg);             //ResolvePaths
+	
+	// debug message
+	//DisplayArgs(char** args);      //PrintArgVector(split_arg);        //////////////////
+  
+	free(input);    //free the input 
+	return split_arg;      //return the newly parsed argument 
 }
 
 char** PArguments(char* input)               //ParseArguments
