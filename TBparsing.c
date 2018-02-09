@@ -6,9 +6,9 @@
 
 char* GetInput()                         //char* ReadInput()
 {                                              //gets whatever input the user puts in
-	size_t BUFFER_SIZE = 512;
-	char* input_s = (char*)calloc(BUFFER_SIZE, sizeof(char));
-	if(fgets(input_s, (int)BUFFER_SIZE, stdin))                                  
+	size_t BUFF_SIZE = 512;
+	char* input_s = (char*)calloc(BUFF_SIZE, sizeof(char));
+	if(fgets(input_s, (int)BUFF_SIZE, stdin))                                  
 		return input_s;                       	                                                   
 	else                                        
 		return NULL;
