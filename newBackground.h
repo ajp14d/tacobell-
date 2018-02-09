@@ -43,4 +43,6 @@ void displayProStart(const struct beginPro* pro, int loc);
 
 void displayProDone(const struct beginPro* pro, int loc);
 
+bool checkNull(const struct beginPro* tocheck)
+
 #endif
