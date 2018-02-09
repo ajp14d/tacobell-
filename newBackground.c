@@ -1,30 +1,30 @@
                                                      
  #include "background.h"
 
-extern struct beginPro* process_queue[];
+extern struct beginPro* thequeue[];
 
 void Init()
 {
         int i = 0;
-        while(i < PQUEUE_SIZE)
+        while(i < THEQUEUE_SIZE)
         {
-                process_queue[i] = NULL;
+                thequeue[i] = NULL;
                 i++;
         }
 
 
 }
 
-void handleQueue(struct beginPro* p)
+void handleQueue(struct beginPro* loc)
 {
         int i = 0;
         // find first available slot
-        while(i < PQUEUE_SIZE)
+        while(i < THEQUEUE_SIZE)
         {
-                if (process_queue[i] == NULL)
+                if (thequeue[i] == NULL)
                 {
-                        process_queue[i] = p;
-                        displayProStart(process_queue[i], i);
+                        thequeue[i] = loc;
+                        displayProStart(thequeue[i], i);
                         break;
                 }
 
@@ -36,11 +36,11 @@ void handleQueue(struct beginPro* p)
 void checkQueue()
 {
         int i = 0;
-        while(i < PQUEUE_SIZE)
+        while(i < THEQUEUE_SIZE)
         {
-                if (process_queue[i] != NULL)
+                if (thequeue[i] != NULL)
                 {
-                        if (checkPro(process_queue[i]))
+                        if (checkPro(thequeue[i]))
                         {
                                 remPro(i);
                         }
@@ -51,24 +51,24 @@ void checkQueue()
 
 void exitQueue()
 {
-        int processes_running = 1;
-        while(processes_running)
+        int run = 1;
+        while(run)
         {
                 checkQueue();
                 int i = 0;
-                while(i < PQUEUE_SIZE)
+                while(i < THEQUEUE_SIZE)
                 {
-                        if (process_queue[i] != NULL)
+                        if (thequeue[i] != NULL)
                         {
-                                processes_running = 1;
+                                run = 1;
                                 break;
                         }
                         i++;
                 }
 
                 switch(i){
-                  case PQUEUE_SIZE:
-                        processes_running = 0;
+                  case THEQUEUE_SIZE:
+                        run = 0;
                         break;
                 }
 
@@ -76,60 +76,60 @@ void exitQueue()
         }
 }
 
-void remPro(int index)
+void remPro(int ind)
 {
-        if (index >= 0 && index < PQUEUE_SIZE)
+        if (ind >= 0 && ind < THEQUEUE_SIZE)
         {
-                if (process_queue[index] != NULL)
+                if (thequeue[ind] != NULL)
                 {
-                        displayProStart(process_queue[index], index);
-                        spacePro(process_queue[index]);
-                        process_queue[index] = NULL;
+                        displayProStart(thequeue[ind], ind);
+                        spacePro(thequeue[ind]);
+                        thequeue[ind] = NULL;
                 }
         }
 }
 
-struct beginPro* newPro(int pid_1, int pid_2, char* cmd)
+struct beginPro* newPro(int firstpid, int secondpid, char* do)
 {
-        struct beginPro* ret = (struct beginPro*)calloc(1, sizeof(struct beginPro));
-        ret->pid_1 = pid_1;
-        ret->pid_2 = pid_2;
-        ret->cmd = (char*)calloc(strlen(cmd)+1,sizeof(char));
-        strcpy(ret->cmd, cmd);
-        return ret;
+        struct beginPro* ans = (struct beginPro*)calloc(1, sizeof(struct beginPro));
+        ans->firstpid = firstpid;
+        ans->secondpid = secondpid;
+        ans->do = (char*)calloc(strlen(do)+1,sizeof(char));
+        strcpy(ans->do, do);
+        return ans;
 }
-void spacePro(struct beginPro* p)
+void spacePro(struct beginPro* pro)
 {
-        free(p->cmd);
-        free(p);
+        free(pro->do);
+        free(pro);
 }
 
-int checkPro(struct beginPro* p)
+int checkPro(struct beginPro* pro)
 {
-        int status;
-        int waitpid_ret;
-        if (p->pid_2 != -1)
+        int now;
+        int waitpid_ans;
+        if (pro->firstpid != -1)
         {
-                waitpid_ret = waitpid(p->pid_2, &status, WNOHANG);
+                waitpid_ans = waitpid(p->secondpid, &now, WNOHANG);
 
-                switch(waitpid_ret){
+                switch(waitpid_ans){
                   case 0:
                         return 0;
                         break;
                   case -1:
-                        printf("Error in child process: %s\n", p->cmd);
+                        printf("Error in child process: %s\n", pro->do);
                         break;
                 }
 
         }
-        waitpid_ret = waitpid(p->pid_1, &status, WNOHANG);
+        waitpid_ans = waitpid(p->firstpid, &now, WNOHANG);
 
-        switch(waitpid_ret){
+        switch(waitpid_ans){
           case 0:
                 return 0;
                 break;
           case -1:
-                printf("Error in child process: %s\n", p->cmd);
+                printf("Error in child process: %s\n", pro->do);
                 break;
           default:
                 return 1;
@@ -140,25 +140,25 @@ int checkPro(struct beginPro* p)
         return 1;       // fix compiler warning
 }
 
-void displayProStart(const struct beginPro* p, int pos)
+void displayProStart(const struct beginPro* pro, int loc)
 {
-        if (p != NULL)
+        if (pro != NULL)
         {
-                if (p->pid_2 != -1)
+                if (pro->second != -1)
                 {
-                        printf("[%i]\t[%i][%i]\n", pos, p->pid_1, p->pid_2);
+                        printf("[%i]\t[%i][%i]\n", loc, pro->firstpid, pro->secondpid);
                 }
                 else
                 {
-                        printf("[%i]\t[%i]\n", pos, p->pid_1);
+                        printf("[%i]\t[%i]\n", loc, pro->firstpid);
                 }
         }
 }
 
-void displayProDone(const struct beginPro* p, int pos)
+void displayProDone(const struct beginPro* pro, int loc)
 {
-        if (p != NULL)
+        if (pro != NULL)
         {
-                printf("[%i]+\t[%s]\n", pos, p->cmd);
+                printf("[%i]+\t[%s]\n", loc, pro->do);
         }
 }
