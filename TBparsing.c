@@ -42,7 +42,7 @@ char* PWhitespace(char* line)                    //ParseWhitespace
 	//flag to tell us if there is any trailing whitespace      //need flag to determine if currently operating on trailing whitespace
 	int trailing_wspace = 0;                //contains_trailing
 	
-	while (current_char != '\0')     //delete intermediate extra whitespace
+	do          //delete intermediate extra whitespace
 	{        //while the current char isnt being null terminated 
 		current_char = line[cnt++];
 		while (current_char == '\n' || current_char == '\t' || current_char == ' ')
@@ -64,7 +64,7 @@ char* PWhitespace(char* line)                    //ParseWhitespace
 			cnt = cnt - (wspace_count - 1);   //update the count iterator if the array is changed through deletion
 		}
 		wspace_count = 0;   //set white space counter back to 0
-	}
+	}while (current_char != '\0');
 	// debug message
 	/*printf("Made it through intermediate whitespace...\n", wspace_count);
 	printf(line);
@@ -142,26 +142,19 @@ char** PathResolve(char** args)           //ResolvePaths
 		{
 			if (arg_it == (cmnd_it + 1))
 			{
-				if (!CharCheck(args[arg_it], '/'))   
+				if (!CharCheck(args[arg_it], '/') && !CharCheck(args[arg_it], '~') && !CharCheck(args[arg_it], '.'))   
 				{
-					if (!CharCheck(args[arg_it], '~') && !CharCheck(args[arg_it], '.'))
-					{
-						args[arg_it] = FPushString(args[arg_it], '/');
-						args[arg_it] = FPushString(args[arg_it], '.');
-					}
+					args[arg_it] = FPushString(args[arg_it], '/');
+					args[arg_it] = FPushString(args[arg_it], '.');
 				}
-				else
+				else if (args[arg_it][0] != '.' && args[arg_it][0] != '~' && args[arg_it][0] != '/')
 				{
-					if (args[arg_it][0] != '.' && args[arg_it][0] != '~' && args[arg_it][0] != '/')
-					{
-						args[arg_it] = FPushString(args[arg_it], '/');
-						args[arg_it] = FPushString(args[arg_it], '.');
-					}
+					args[arg_it] = FPushString(args[arg_it], '/');
+					args[arg_it] = FPushString(args[arg_it], '.');
 				}
 				args[arg_it] = PathMaker(args[arg_it]);   
 			}
 		}
-		
 		
 		//cur_type = IsCommand(args,arg_it);						[FIXED COMPILER WARNING UNUSED VAR]
 		//printf("%s	%i\n", args[arg_it], cur_type);  
@@ -172,7 +165,7 @@ char** PathResolve(char** args)           //ResolvePaths
 			cmnd_it = arg_it;
 			new_cmnd = 0;
 		}
-		else
+		else                                        
 		{
 			if ((strcmp(args[arg_it], "<") == 0) || (strcmp(args[arg_it], ">") == 0) || (strcmp(args[arg_it], "|") == 0))
 			{
@@ -220,7 +213,7 @@ char** Expand(char** args)       //ExpandVariables
 	size_t arg_it = 0;    //argument iterator
 	size_t str_it = 0;     //string iterator
 	//char* str = args[arg_it];
-	while (args[arg_it] != NULL)
+	do 
 	{
 		char c = args[arg_it][str_it];
 		while (c != '\0')    //while the character doesnt equal null
@@ -240,7 +233,7 @@ char** Expand(char** args)       //ExpandVariables
 				c = args[arg_it][++str_it];
 				while (c != '$' && c != '\0' && c != '/')
 				{
-					environment_v = BPushString(environment_var, c);   /////////////////
+					environment_v = BPushString(environment_var, c);  
 					c = args[arg_it][++str_it];
 					counter++;
 				}
@@ -257,6 +250,6 @@ char** Expand(char** args)       //ExpandVariables
 		}
 		str_it = 0;
 		++arg_it;
-	}
+	}while (args[arg_it] != NULL);
 	return args;
 }
