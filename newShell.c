@@ -619,3 +619,16 @@ int checkZero(int tocheck)
 	else
 		return 0;
 }
+
+void KillZombies() {
+
+    pid_t pid;
+
+    // Kill processes as long as we keep finding them
+    while ( ( pid = waitpid( -1, 0, WNOHANG ) )  )
+        
+        // No zombie processes are found
+        if ( pid == -1 || pid == 0 )
+            break;
+
+}
