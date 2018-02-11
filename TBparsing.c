@@ -55,12 +55,12 @@ char* PWhitespace(char* line)                    //ParseWhitespace
 		if (trailing_wspace == 1)   //if there is trailing whitespace
 		{
 			if (wspace_count > 0)   //if that whitespace is greater than 0
-				line = DelFunc(line, cnt - wspace_count - 1, cnt - 2);     
+				line = DelFunc(line, cnt - wspace_count - 1, cnt - 2);  //delete the whitespace   
 			break;
 		}
 		else if (wspace_count > 1)
 		{
-			line = DelFunc(line, cnt - wspace_count - 1, cnt - 3);
+			line = DelFunc(line, cnt - wspace_count - 1, cnt - 3);   //delete the whitespace 
 			cnt = cnt - (wspace_count - 1);   //update the count iterator if the array is changed through deletion
 		}
 		wspace_count = 0;   //set white space counter back to 0
@@ -76,33 +76,13 @@ char* PWhitespace(char* line)                    //ParseWhitespace
 	// (buffer overflow)
 	return line;
 }
-	
-char** ParseI(char* input)                           //ParseInput
-{                                               //seperates and stores the values
-	input = PWhitespace(input);       //ParseWhitespace
-	char** split_arg = PArguments(input);            //split_args
-	
-	if(split_arg[0] != NULL)          //if '&' is in front remove it         //check for leading '&' and remove if present
-	{
-		if(strcmp(split_arg[0], "&") == 0)
-			split_arg = RemoveArr(split_arg, 0);
-	}
-	
-	split_arg = Expand(split_arg);           //ExpandVariables
-	split_arg = PathResolve(split_arg);             //ResolvePaths
-	
-	// debug message
-	//DisplayArgs(char** args);      //PrintArgVector(split_arg);        //////////////////
-  
-	free(input);    //free the input 
-	return split_arg;      //return the newly parsed argument 
-}
 
+// Converts the line input from the user into the array of command arguments.
 char** PArguments(char* input)               //ParseArguments
 {
 	size_t cnt = 0;
 	char c = input[cnt];
-	int tokn_c = 1;                 //token_count
+	int tokn_c = 1, i = 0;                 //token_count  
 
 	while (c != '\0')
 	{
@@ -111,20 +91,19 @@ char** PArguments(char* input)               //ParseArguments
 		c = input[++cnt];
 	}
 
-	int i = 0;       
-	char** retrn = (char**)calloc(tokn_c + 1, sizeof(char*));    //char** ret
-	char* tmp = strtok(input, " \n\t");
+	char* temp = strtok(input, " \n\t");    //tmp  //tokenize the input line
+	char** retrn = (char**)calloc(tokn_c + 1, sizeof(char*));    //char** ret  //allocate memory
 
-	if (tmp != NULL)
+	if (temp != NULL)
 	{
-		retrn[i] = (char*)calloc(strlen(tmp) + 1, sizeof(char));
-		strcpy(retrn[i], tmp);
+		retrn[i] = (char*)calloc(strlen(temp) + 1, sizeof(char));
+		strcpy(retrn[i], temp);
 	}
 	for (i = 1; i < tokn_c; i++)
 	{
-		tmp = strtok(NULL, " \n\t");
-		retrn[i] = (char*)calloc(strlen(tmp) + 1, sizeof(char));
-		strcpy(retrn[i], tmp);
+		temp = strtok(NULL, " \n\t");
+		retrn[i] = (char*)calloc(strlen(temp) + 1, sizeof(char));
+		strcpy(retrn[i], temp);
 	}
 	retrn[i] = NULL;
 	return retrn;
@@ -208,7 +187,7 @@ char** PathResolve(char** args)           //ResolvePaths
 	return args;
 }
 
-char** Expand(char** args)       //ExpandVariables
+char** Expand(char** args)       //ExpandVariables   //Expands all environment variables in the command argument array
 {
 	size_t arg_it = 0;    //argument iterator
 	size_t str_it = 0;     //string iterator
@@ -221,11 +200,11 @@ char** Expand(char** args)       //ExpandVariables
 			if (c == '$')     
 			{
 				char* environment_v = (char*)calloc(2, sizeof(char));     //env_var
-				size_t counter = 1;     //count
 				c = args[arg_it][++str_it];
+				size_t counter = 1;     //count
 				if (c == '\0' || c == '$')
 				{
-					free(environment_v);    //$ at end of string or two $ in a row
+					free(environment_v);    //if there is $ at the end of the string or two $ in a row
 					break;
 				}
 				environment_v[0] = c;
@@ -252,4 +231,26 @@ char** Expand(char** args)       //ExpandVariables
 		++arg_it;
 	}while (args[arg_it] != NULL);
 	return args;
+}
+
+char** ParseI(char* input)                           //ParseInput
+{                                               //seperates and stores the values
+	//first get rid of any whitespace
+	input = PWhitespace(input);       //ParseWhitespace
+	char** split_arg = PArguments(input);      //split_args   //load it into the array of command arguments.
+	
+	if(split_arg[0] != NULL)          //if '&' is in front remove it         //check for leading '&' and remove if present
+	{
+		if(strcmp(split_arg[0], "&") == 0)
+			split_arg = RemoveArr(split_arg, 0);
+	}
+	
+	split_arg = Expand(split_arg);           //ExpandVariables  //Expand all environment variables in the command argument array
+	split_arg = PathResolve(split_arg);             //ResolvePaths  // Resolve all paths in the command argument array
+	
+	// debug message
+	//DisplayArgs(char** args);      //PrintArgVector(split_arg);       
+  
+	free(input);    //must free all of the memory 
+	return split_arg;      //return the newly parsed argument 
 }
