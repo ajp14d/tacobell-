@@ -6,7 +6,7 @@
 
 char* GetInput()                         //char* ReadInput()
 {                                              //gets whatever input the user puts in
-	size_t BUFF_SIZE = 512;
+	size_t BUFF_SIZE = 255;    //user input will be no more than 255 characters
 	char* input_s = (char*)calloc(BUFF_SIZE, sizeof(char));
 	if(fgets(input_s, (int)BUFF_SIZE, stdin))                                  
 		return input_s;                       	                                                   
@@ -21,7 +21,7 @@ char* PWhitespace(char* line)                    //ParseWhitespace
 	char current_char = line[cnt];     //cur_char
 	
 	while (current_char != '\0' && (current_char == '\t ' || current_char == '\n' || current_char == ' '))  // delete leading whitespace
-	{    //while the current char isnt null, a tab, a newline, or a space
+	{    
 		current_char = line[++cnt];
 		wspace_count++;
 	}
