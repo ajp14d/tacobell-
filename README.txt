@@ -11,6 +11,9 @@ Division of Labor
 - Abby Perry: Piping
 - Hunter Davis: Parsing
 
+How to Compile Using the Makefile
+
+
 Tar File Contents:
 
 
