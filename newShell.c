@@ -8,6 +8,7 @@ void RunShell()
 	Init();
 	while (run)
 	{
+		KillZombies();
 		checkQueue();
 		PrintPrompt();
 		str = ReadInput();
