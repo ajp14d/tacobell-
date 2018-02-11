@@ -3,14 +3,13 @@
 #include<string.h>
 #include<unistd.h>
 
-void BigFree(char** array)
+void MemFunc(char** arr)   //BigFree(char** array)
 {
 	size_t it = 0;
-	
 	while (array[it] != NULL)
 	{
-			free(array[it]);
-			++it;
+		free(array[it]);
+		++it;
 	}
 	free(array);
 }
