@@ -49,4 +49,6 @@ void ETime(char** argv);
 
 int checkZero(int tocheck);
 
+void KillZombies();
+
 #endif
