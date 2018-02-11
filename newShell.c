@@ -2,11 +2,11 @@
 
 void RunShell()
 {
-	int running = 1;
+	int run = 1;
 	char* str;
 	char** argv;
 	Init();
-	while (running)
+	while (run)
 	{
 		checkQueue();
 		PrintPrompt();
