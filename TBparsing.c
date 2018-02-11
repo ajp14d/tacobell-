@@ -91,7 +91,9 @@ char** PArguments(char* input)               //ParseArguments
 		c = input[++cnt];
 	}
 
-	char* temp = strtok(input, " \n\t");    //tmp  //tokenize the input line
+	char* temp = strtok(input, " \n\t");    //tmp  //tokenize the input line   ///////////////////////////////////////////
+	//char* temp; 
+	//sscanf(input, "%s \n\t", temp);
 	char** retrn = (char**)calloc(tokn_c + 1, sizeof(char*));    //char** ret  //allocate memory
 
 	if (temp != NULL)
@@ -101,7 +103,8 @@ char** PArguments(char* input)               //ParseArguments
 	}
 	for (i = 1; i < tokn_c; i++)
 	{
-		temp = strtok(NULL, " \n\t");
+		temp = strtok(NULL, " \n\t");///////////////////////////////////////////////////////////////
+		//sscanf(NULL, "%s \n\t", temp);
 		retrn[i] = (char*)calloc(strlen(temp) + 1, sizeof(char));
 		strcpy(retrn[i], temp);
 	}
