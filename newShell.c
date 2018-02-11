@@ -27,16 +27,16 @@ void RunShell()
 		}
 		else if (strcmp(argv[0], "exit") == 0)
 		{
-			BigFree(argv);
+			MemFunc(argv);
 			printf("Exiting Shell...\n");
 			exitQueue();
 			exit(0);
 		}
 		else if (strcmp(argv[0], "cd") == 0)
 		{
-			if (ArraySize(argv) <= 2)
+			if (GetSize(argv) <= 2)
 			{
-				if (ArraySize(argv) == 2)
+				if (GetSize(argv) == 2)
 					ChangeDirectory(argv[1]);
 				else
 					ChangeDirectory(getenv("HOME"));
@@ -48,26 +48,26 @@ void RunShell()
 		}
 		else if (strcmp(argv[0], "io") == 0)
 		{
-			if (ArraySize(argv) > 1)
+			if (GetSize(argv) > 1)
 			{
-				argv = ArrayRemoveElement(argv, 0);
+				argv = RemoveArr(argv, 0);
 				Limits(argv);
 			}
 		}
 		else if (strcmp(argv[0], "etime") == 0)
 		{
-			if (ArraySize(argv) > 1)
+			if (GetSize(argv) > 1)
 			{
-				argv = ArrayRemoveElement(argv, 0);
+				argv = RemoveArr(argv, 0);
 				ETime(argv);
 			}
 		}
-		else if (IsExecutable(argv[0]))
+		else if (ExecCheck(argv[0]))
 		{
-			int background = VecContainsStr(argv, "&");
-			int I_loc = VecContainsStr(argv, "<");
-			int O_loc = VecContainsStr(argv, ">");
-			int pipe_count = ArgvCountSymbol(argv, "|");
+			int background = StringCheck(argv, "&");
+			int I_loc = StringCheck(argv, "<");
+			int O_loc = StringCheck(argv, ">");
+			int pipe_count = CountStr(argv, "|");
 			if (I_loc != -1)
 			{
 				argv = ExecuteExternalWithInput(argv, I_loc, background);
@@ -82,10 +82,10 @@ void RunShell()
 			}
 			else
 			{
-				char* cmd = ArgvToString(argv);
+				char* cmd = Convert(argv);
 				if (background != -1)
 				{
-					argv = ArrayRemoveElement(argv, background);
+					argv = RemoveArr(argv, background);
 				}
 				ExecuteExternal(argv, background, cmd);
 				free(cmd);
@@ -93,7 +93,7 @@ void RunShell()
 		}
 
 
-		BigFree(argv);
+		MemFunc(argv);
 	}
 }
 
@@ -131,7 +131,7 @@ void ExecuteExternal(char** argv, int background, char* cmd)
 	{
 		execv(argv[0], argv);
 		printf("Trouble executing: \n");
-		PrintArgVector(argv);
+		DisplayArgs(argv);
 		exit(1);
 		break;
 	}
@@ -162,15 +162,15 @@ char** ExecuteExternalWithInput(char** argv, int I_loc, int background)
 	char* filename = (char*)calloc(strlen(argv[I_loc+1])+1, sizeof(char));
 	strcpy(filename, argv[I_loc+1]);
 
-	argv = ArrayRemoveElement(argv, I_loc);
-	argv = ArrayRemoveElement(argv, I_loc);
+	argv = RemoveArr(argv, I_loc);
+	argv = RemoveArr(argv, I_loc);
 				
 	// update background iterator
-	background = VecContainsStr(argv, "&");
-	char* cmd = ArgvToString(argv);
+	background = StringCheck(argv, "&");
+	char* cmd = Convert(argv);
 	if (background != -1)
 	{
-		argv = ArrayRemoveElement(argv, background);
+		argv = RemoveArr(argv, background);
 	}
 	IORedirect(argv, 1, filename, background, cmd);
 	free(filename);
@@ -184,15 +184,15 @@ char** ExecuteExternalWithOutput(char** argv, int O_loc, int background)
 	char* filename = (char*)calloc(strlen(argv[O_loc+1])+1, sizeof(char));
 	strcpy(filename, argv[O_loc+1]);
 
-	argv = ArrayRemoveElement(argv, O_loc);
-	argv = ArrayRemoveElement(argv, O_loc);
+	argv = RemoveArr(argv, O_loc);
+	argv = RemoveArr(argv, O_loc);
 			
 	// update background iterator
-	background = VecContainsStr(argv, "&");
-	char* cmd = ArgvToString(argv);
+	background = StringCheck(argv, "&");
+	char* cmd = Convert(argv);
 	if (background != -1)
 	{
-		argv = ArrayRemoveElement(argv, background);
+		argv = RemoveArr(argv, background);
 	}
 	IORedirect(argv, 0, filename, background, cmd);
 	free(filename);
@@ -203,10 +203,10 @@ char** ExecuteExternalWithOutput(char** argv, int O_loc, int background)
 
 char** ExecuteExternalWithPipe(char** argv, int pipe_count, int background)
 {
-	char* cmd = ArgvToString(argv);
+	char* cmd = Convert(argv);
 	if (background != -1)
 	{
-		argv = ArrayRemoveElement(argv, background);
+		argv = RemoveArr(argv, background);
 	}
 	switch(pipe_count){
 	case 1:
@@ -218,18 +218,18 @@ char** ExecuteExternalWithPipe(char** argv, int pipe_count, int background)
 		int it = 0;
 		while(strcmp(argv[it], "|") != 0)
 		{
-			argv1 = ArrayPushBack(argv1, argv[it]);
+			argv1 = PBackArr(argv1, argv[it]);
 			++it;
 		}
 		++it;
 		while(argv[it] != NULL)
 		{
-			argv2 = ArrayPushBack(argv2, argv[it]);
+			argv2 = PBackArr(argv2, argv[it]);
 			++it;
 		}
 		OnePipe(argv1, argv2, background, cmd);
-		BigFree(argv1);
-		BigFree(argv2);
+		MemFunc(argv1);
+		MemFunc(argv2);
 		break;
 	}
 	case 2:
@@ -243,25 +243,25 @@ char** ExecuteExternalWithPipe(char** argv, int pipe_count, int background)
 		int it = 0;
 		while(strcmp(argv[it], "|") != 0)
 		{
-			argv1 = ArrayPushBack(argv1, argv[it]);
+			argv1 = PBackArr(argv1, argv[it]);
 			++it;
 		}
 		++it;
 		while(strcmp(argv[it], "|") != 0)
 		{
-			argv2 = ArrayPushBack(argv2, argv[it]);
+			argv2 = PBackArr(argv2, argv[it]);
 			++it;
 		}
 		++it;
 		while(argv[it] != NULL)
 		{
-			argv3 = ArrayPushBack(argv3, argv[it]);
+			argv3 = PBackArr(argv3, argv[it]);
 			++it;
 		}
 		TwoPipe(argv1, argv2, argv3, background, cmd);
-		BigFree(argv1);
-		BigFree(argv2);
-		BigFree(argv3);
+		MemFunc(argv1);
+		MemFunc(argv2);
+		MemFunc(argv3);
 		break;
 	}
 	case 3:
@@ -277,32 +277,32 @@ char** ExecuteExternalWithPipe(char** argv, int pipe_count, int background)
 		int it = 0;
 		while(strcmp(argv[it], "|") != 0)
 		{
-			argv1 = ArrayPushBack(argv1, argv[it]);
+			argv1 = PBackArr(argv1, argv[it]);
 			++it;
 		}
 		++it;
 		while(strcmp(argv[it], "|") != 0)
 		{
-			argv2 = ArrayPushBack(argv2, argv[it]);
+			argv2 = PBackArr(argv2, argv[it]);
 			++it;
 		}
 		++it;
 		while(strcmp(argv[it], "|") != 0)
 		{
-			argv3 = ArrayPushBack(argv3, argv[it]);
+			argv3 = PBackArr(argv3, argv[it]);
 			++it;
 		}
 		++it;
 		while(argv[it] != NULL)
 		{
-			argv4 = ArrayPushBack(argv4, argv[it]);
+			argv4 = PBackArr(argv4, argv[it]);
 			++it;
 		}
 		ThreePipe(argv1, argv2, argv3, argv4, background, cmd);
-		BigFree(argv1);
-		BigFree(argv2);
-		BigFree(argv3);
-		BigFree(argv4);
+		MemFunc(argv1);
+		MemFunc(argv2);
+		MemFunc(argv3);
+		MemFunc(argv4);
 		break;
 	}
 	}
@@ -423,12 +423,12 @@ void IORedirect(char** argv, int dir, char* filename, int background, char* cmd)
 int CheckForIOandPipeErrors(char** argv)
 {
 	
-	switch(ArraySize(argv)){
+	switch(GetSize(argv)){
 	case 1:
 	{
-		if ((VecContainsStr(argv, "<") != -1) ||
-			(VecContainsStr(argv, ">") != -1) ||
-			(VecContainsStr(argv, "|") != -1))
+		if ((StringCheck(argv, "<") != -1) ||
+			(StringCheck(argv, ">") != -1) ||
+			(StringCheck(argv, "|") != -1))
 		{
 			printf("Requires more than 1 argument\n");
 			return 1;
@@ -437,16 +437,16 @@ int CheckForIOandPipeErrors(char** argv)
 	}
 	default:
 	{
-		if ((VecContainsStr(argv, "<") == 0) ||
-			(VecContainsStr(argv, ">") == 0) ||
-			(VecContainsStr(argv, "|") == 0))
+		if ((StringCheck(argv, "<") == 0) ||
+			(StringCheck(argv, ">") == 0) ||
+			(StringCheck(argv, "|") == 0))
 		{
 			printf("Error, IO redirection or pipe cannot appear at beginning of statement\n");
 			return 1;
 		}
-		else if ((VecContainsStr(argv, "<") == ArraySize(argv)-1) ||
-				 (VecContainsStr(argv, ">") == ArraySize(argv)-1) ||
-				 (VecContainsStr(argv, "|") == ArraySize(argv)-1))
+		else if ((StringCheck(argv, "<") == GetSize(argv)-1) ||
+				 (StringCheck(argv, ">") == GetSize(argv)-1) ||
+				 (StringCheck(argv, "|") == GetSize(argv)-1))
 		{
 			printf("Error, IO redirection or pipe cannot appear at end of statement\n");
 			return 1;
@@ -459,10 +459,10 @@ int CheckForIOandPipeErrors(char** argv)
 
 int CheckForBackgroundErrors(char** argv)
 {
-	int I_loc = VecContainsStr(argv, "<");
-	int O_loc = VecContainsStr(argv, ">");
-	int P_loc = VecContainsStr(argv, "|");
-	int B_loc = VecContainsStr(argv, "&");
+	int I_loc = StringCheck(argv, "<");
+	int O_loc = StringCheck(argv, ">");
+	int P_loc = StringCheck(argv, "|");
+	int B_loc = StringCheck(argv, "&");
 	
 	if (B_loc == -1)
 	{
@@ -543,7 +543,7 @@ void Limits(char** argv)
 	{
 		execv(argv[0], argv);
 		printf("Trouble executing: \n");
-		PrintArgVector(argv);
+		DisplayArgs(argv);
 		exit(1);
 		break;
 	}
@@ -592,7 +592,7 @@ void ETime(char** argv)
 	  {
 		execv(argv[0], argv);
                 printf("Trouble executing: \n");
-                PrintArgVector(argv);
+                DisplayArgs(argv);
                 exit(1);
 		break;
 	  }
