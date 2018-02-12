@@ -11,10 +11,19 @@ Division of Labor
 - Abby Perry: Piping
 - Hunter Davis: Parsing
 
-How to Compile Using the Makefile
+How to Compile:
+- Using the Makefile 
+- type make
 
+How to clean: 
+-make clean 
 
 Tar File Contents:
+README.txt
+main.c
+makefile
+
+Completed using: linprog
 
 
 Brief Description of Each File:
