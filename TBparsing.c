@@ -4,8 +4,8 @@
 #include<stdlib.h>
 #include<string.h>
 
-char* GetInput()                         //char* ReadInput()
-{                                              //gets whatever input the user puts in
+char* GetInput()                         
+{                                            
 	size_t BUFF_SIZE = 255;    //user input will be no more than 255 characters
 	char* input_size = (char*)calloc(BUFF_SIZE, sizeof(char));
 	if(fgets(input_size, (int)BUFF_SIZE, stdin))                                  
@@ -14,11 +14,11 @@ char* GetInput()                         //char* ReadInput()
 		return NULL;
 }
 
-char* PWhitespace(char* line)                    //ParseWhitespace
+char* PWhitespace(char* line)                   
 {
   	int wspace_count = 0;      //whitespace_count
 	size_t cnt = 0;       //count iterator
-	char current_char = line[cnt];     //cur_char
+	char current_char = line[cnt];   
 	
 	while ((current_char == '\t ' || current_char == '\n' || current_char == ' ') && current_char != '\0')  // delete leading whitespace
 	{    
@@ -31,11 +31,11 @@ char* PWhitespace(char* line)                    //ParseWhitespace
 	cnt = 0;
 	wspace_count = 0;
 	
-	//flag to tell us if there is any trailing whitespace      //need flag to determine if currently operating on trailing whitespace
-	int trailing_wspace = 0;                //contains_trailing
+	//flag to tell us if there is any trailing whitespace     
+	int trailing_wspace = 0;                
 	
-	do          //delete intermediate extra whitespace
-	{        //while the current char isnt being null terminated 
+	do         
+	{       
 		current_char = line[cnt++];
 		while (current_char == '\n' || current_char == '\t' || current_char == ' ')
 		{
@@ -58,9 +58,6 @@ char* PWhitespace(char* line)                    //ParseWhitespace
 		wspace_count = 0;   //set white space counter back to 0
 	}while (current_char != '\0');
 	
-	// bug on return                 ////////////////////////////////////////////////////////////////////////////////
-	// current guess is somewhere writing over the return address
-	// (buffer overflow)
 	return line;
 }
 
@@ -78,11 +75,11 @@ char** PArguments(char* input)               //ParseArguments
 		ch = input[++cnt];
 	}
 
-	char* temp = strtok(input, " \n\t");    //tmp  //tokenize the input line   ///////////////////////////////////////////
+	char* temp = strtok(input, " \n\t");    //tmp  //tokenize the input line   //////////////////////
 	//char* temp; 
 	//sscanf(input, "%s \n\t", temp);
 	//isspace
-	char** retrn = (char**)calloc(tokn_c + 1, sizeof(char*));    //char** ret  //allocate memory
+	char** retrn = (char**)calloc(tokn_c + 1, sizeof(char*));      //allocate memory
 
 	if (temp != NULL)
 	{
@@ -100,10 +97,10 @@ char** PArguments(char* input)               //ParseArguments
 	return retrn;
 }
 
-char** PathResolve(char** args)           //ResolvePaths                    //check if cmmnd count is correct
+char** PathResolve(char** args)           
 {      //iterator, parent cmd type, iterator to point to current command, flag for new cmd (after | < or >)
-	int argmn_it = 0, cmnd_type = 0, cmnd_it = 0, new_cmnd = 1;	    //cmd_type, cmd_int, new_cmd 
-	char* current_cmnd = args[0];     //cur_cmd
+	int argmn_it = 0, cmnd_type = 0, cmnd_it = 0, new_cmnd = 1;	  
+	char* current_cmnd = args[0];     
 
 	do 
 	{          // cd
@@ -142,7 +139,6 @@ char** PathResolve(char** args)           //ResolvePaths                    //ch
 			}
 		}
 		
-		// etime and limits
 		else if (cmnd_type == 3)    //if the command chosen is etime or limits
 		{
 			if ((strcmp(current_cmnd, "etime") == 0) || (strcmp(current_cmnd, "limits") == 0))
@@ -155,10 +151,9 @@ char** PathResolve(char** args)           //ResolvePaths                    //ch
 			}
 		}
 
-		// external commands
-		else if (cmnd_type == 1)     //if the commands chosen are external       /////
+		else if (cmnd_type == 1)     //if the commands chosen are external      
 		{
-			if (argmn_it == cmnd_it && (CharCheck(args[argmn_it], '/') == 1))     ///
+			if (argmn_it == cmnd_it && (CharCheck(args[argmn_it], '/') == 1))    
 				args[argmn_it] = PathMaker(args[argmn_it]);
 			
 			else if (argmn_it == cmnd_it)
@@ -169,7 +164,7 @@ char** PathResolve(char** args)           //ResolvePaths                    //ch
 	return args;
 }
 
-char** Expand(char** args)       //ExpandVariables   //Expands all environment variables in the command argument array  ///
+char** Expand(char** args)       //Expands all environment variables in the command argument array  ///
 {      //argument iterator   //string iterator
 	size_t argmn_it = 0, strng_it = 0;  
 	do 
@@ -179,9 +174,9 @@ char** Expand(char** args)       //ExpandVariables   //Expands all environment v
 		{
 			if (ch == '$')     
 			{
-				char* environment_v = (char*)calloc(2, sizeof(char));     //env_var
+				char* environment_v = (char*)calloc(2, sizeof(char));     
 				ch = args[argmn_it][++strng_it];
-				size_t counter = 1;     //count
+				size_t counter = 1;     
 				if (ch == '\0' || ch == '$')
 				{
 					free(environment_v);    //if there is $ at the end of the string or two $ in a row
@@ -196,10 +191,10 @@ char** Expand(char** args)       //ExpandVariables   //Expands all environment v
 					ch = args[argmn_it][++strng_it];
 					counter++;
 				}
-				char* retrn_environment = getenv(environment_v);    //ret_env  getenv(env_var)
+				char* retrn_environment = getenv(environment_v);    
 				if (retrn_environment == NULL)
 				{
-					free(environment_v);   // invalid env variable
+					free(environment_v);   // invalid environment variable
 					break;
 				}
 				args[argmn_it] = CharRep(args[argmn_it], strng_it - counter - 1, strng_it - 1, retrn_environment);
@@ -213,24 +208,21 @@ char** Expand(char** args)       //ExpandVariables   //Expands all environment v
 	return args;
 }
 
-char** ParseI(char* input)                           //ParseInput
+char** ParseI(char* input)                          
 {                                               //seperates and stores the values
 	//first get rid of any whitespace
-	input = PWhitespace(input);       //ParseWhitespace
-	char** split = PArguments(input);      //split_args   //load it into the array of command arguments.
+	input = PWhitespace(input);     
+	char** split = PArguments(input);       //load it into the array of command arguments.
 	
-	if(split[0] != NULL)          //if '&' is in front remove it         //check for leading '&' and remove if present
+	if(split[0] != NULL)          //if '&' is in front remove it     
 	{
 		if(strcmp(split[0], "&") == 0)
 			split = RemoveArr(split, 0);
 	}
 	
-	split = Expand(split);           //ExpandVariables  //Expand all environment variables in the command argument array
-	split = PathResolve(split);             //ResolvePaths  // Resolve all paths in the command argument array
+	split = Expand(split);          //Expand all environment variables in the command argument array
+	split = PathResolve(split);           // Resolve all paths in the command argument array
 	
-	// debug message
-	//DisplayArgs(char** args);      //PrintArgVector(split_arg);       
-  
 	free(input);    //must free all of the memory 
 	return split;      //return the newly parsed argument 
 }
