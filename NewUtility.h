@@ -95,4 +95,36 @@ char* Convert(char** argv);
 // Counts the number of times a string appears in an argument vector
 int CountStr(char** argv, const char* s);
 
+void ChangeDirectory(const char* dir);
+
+
+
+void ExecuteExternal(char** argv, int background, char* cmd);
+
+char** ExecuteExternalWithInput(char** argv, int I_loc, int background);
+
+char** ExecuteExternalWithOutput(char** argv, int O_loc, int background);
+
+char** ExecuteExternalWithPipe(char** argv, int pipe_count, int background);
+
+// For file IO redirection
+// dir=0 for output redirect
+// dir=1 for input redirect
+void IORedirect(char** argv, int dir, char* filename, int background, char* cmd);
+
+int CheckForIOandPipeErrors(char** argv);
+
+int CheckForBackgroundErrors(char** argv);
+
+void PrintPrompt();
+
+void Limits(char** argv);
+
+void ETime(char** argv);
+
+int checkZero(int tocheck);
+
+void KillZombies();
+
+
 #endif
