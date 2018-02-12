@@ -37,7 +37,7 @@ char* PWhitespace(char* line)
 	
 	       
 	while (current_char != '\0')
-	{
+	(
 		current_char = line[cnt++];
 		while (current_char == '\n' || current_char == '\t' || current_char == ' ')
 		{
