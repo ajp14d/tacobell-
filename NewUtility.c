@@ -159,11 +159,14 @@ char* RmDir(char* p)
 
 int CmdCheck(char** args, int a)
 {
-	static char* cmdsInclude[5] = {"exit", "echo", "etime", "limits", NULL}; // static sets scope
+	static char* cmdsInclude[6] = {"exit", "echo", "cd", "etime", "limits", NULL}; // static sets scope
 
-	if (CmdVal(args[a]))
-		return 1;
-
+	if (strcmp(args[a], "cd") != 0)
+	{
+		if (CmdVal(args[a]))
+			return 1;
+	}
+	
 	if (strcmp(args[a], "cd") == 0)
 		return 2;
 
