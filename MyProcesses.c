@@ -1,5 +1,5 @@
                                                      
- #include "newBackground.h"
+ #include "MyProcesses.h"
 
 extern struct beginPro* thequeue[];
 
