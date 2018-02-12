@@ -111,7 +111,7 @@ int checkPro(struct beginPro* pro)
         int waitpid_ans;
         if (pro->firstpid != -1)
         {
-                waitpid_ans = waitpid(p->secondpid, &now, WNOHANG);
+                waitpid_ans = waitpid(pro->secondpid, &now, WNOHANG);
 
                 switch(waitpid_ans){
                   case 0:
