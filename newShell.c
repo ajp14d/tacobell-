@@ -14,17 +14,9 @@ void RunShell()
 		str = ReadInput();
 		argv = ParseInput(str);
 		
-		if (argv[0] == NULL)
+		if ((argv[0] == NULL) || CheckForIOandPipeErrors(argv) || CheckForBackgroundErrors(argv))
 		{
 			// do nothing if empty arguments
-		}
-		else if (CheckForIOandPipeErrors(argv))
-		{
-			// do nothing if IO or pipe error
-		}
-		else if (CheckForBackgroundErrors(argv))
-		{
-			// do nothing if background processing format error
 		}
 		else if (strcmp(argv[0], "exit") == 0)
 		{
