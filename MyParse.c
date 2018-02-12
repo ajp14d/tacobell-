@@ -140,7 +140,7 @@ char** PathResolve(char** args)
 			}
 		}
 		
-		else if (cmnd_type == 3)    //if the command chosen is etime or limits
+		if (cmnd_type == 3)    //if the command chosen is etime or limits
 		{
 			if ((strcmp(current_cmnd, "etime") == 0) || (strcmp(current_cmnd, "limits") == 0))
 			{
