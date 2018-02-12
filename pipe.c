@@ -22,7 +22,7 @@ void OnePipe(char** argv1, char** argv2, int background, char* cmd)
 			{
 				waitpid(c2PID, &status, WNOHANG);
 				waitpid(c1PID, &status, WNOHANG);
-				QueueProcess(CreateProcessEntry(c1PID, c2PID, cmd));
+				handleQueue(newPro(c1PID, c2PID, cmd));
 			}
 			else
 			{
@@ -40,12 +40,12 @@ void OnePipe(char** argv1, char** argv2, int background, char* cmd)
 			execvp(argv2[0], argv2);
 			
 			printf("Error executing in fork in OnePipe: \n");
-			PrintArgVector(argv2);
+			DisplayArgs(argv2);
 		}
 		else
 		{
 			printf("Error executing in fork in OnePipe: \n");
-			PrintArgVector(argv2);
+			DisplayArgs(argv2);
 		}
 		
 	}
@@ -60,7 +60,7 @@ void OnePipe(char** argv1, char** argv2, int background, char* cmd)
 		execvp(argv1[0], argv1);
 		
 		printf("Error executing in fork in OnePipe: \n");
-		PrintArgVector(argv1);
+		DisplayArgs(argv1);
 	}
 	else
 	{
@@ -112,12 +112,12 @@ void TwoPipe(char** argv1, char** argv2, char** argv3, int background, char* cmd
 				execvp(argv3[0], argv3);
 				
 				printf("Error executing in fork of TwoPipe: \n");
-				PrintArgVector(argv3);
+				DisplayArgs(argv3);
 			}
 			else
 			{
 				printf("Error executing in fork in TwoPipe: \n");
-				PrintArgVector(argv3);
+				DisplayArgs(argv3);
 			}
 		}
 		// child of fork 2
@@ -135,12 +135,12 @@ void TwoPipe(char** argv1, char** argv2, char** argv3, int background, char* cmd
 			execvp(argv2[0], argv2);
 			
 			printf("Error executing in fork of TwoPipe: \n");
-			PrintArgVector(argv2);
+			DisplayArgs(argv2);
 		}
 		else
 		{
 			printf("Error executing in fork in TwoPipe: \n");
-			PrintArgVector(argv2);
+			DisplayArgs(argv2);
 		}
 	}
 	// in child of fork 1
@@ -156,12 +156,12 @@ void TwoPipe(char** argv1, char** argv2, char** argv3, int background, char* cmd
 		execvp(argv1[0], argv1);
 		
 		printf("Error executing in fork of TwoPipe: \n");
-		PrintArgVector(argv1);
+		DisplayArgs(argv1);
 	}
 	else
 	{
 		printf("Error executing in fork in TwoPipe: \n");
-		PrintArgVector(argv1);
+		DisplayArgs(argv1);
 	}
 }
 
@@ -223,12 +223,12 @@ void ThreePipe(char** argv1, char** argv2, char** argv3, char** argv4, int backg
 					execvp(argv4[0], argv4);
 					
 					printf("Error executing in fork of ThreePipe: \n");
-					PrintArgVector(argv4);
+					DisplayArgs(argv4);
 				}
 				else
 				{
 					printf("Error executing in fork in ThreePipe: \n");
-					PrintArgVector(argv4);
+					DisplayArgs(argv4);
 				}
 			}
 			// inside child of fork 3
@@ -248,12 +248,12 @@ void ThreePipe(char** argv1, char** argv2, char** argv3, char** argv4, int backg
 				execvp(argv3[0], argv3);
 				
 				printf("Error executing in fork of ThreePipe: \n");
-				PrintArgVector(argv3);
+				DisplayArgs(argv3);
 			}
 			else
 			{
 				printf("Error executing in fork in ThreePipe: \n");
-				PrintArgVector(argv3);
+				DisplayArgs(argv3);
 			}
 		}
 		// inside child of fork 2
@@ -273,12 +273,12 @@ void ThreePipe(char** argv1, char** argv2, char** argv3, char** argv4, int backg
 			execvp(argv2[0], argv2);
 			
 			printf("Error executing in fork of ThreePipe: \n");
-			PrintArgVector(argv2);
+			DisplayArgs(argv2);
 		}
 		else
 		{
 			printf("Error executing in fork in ThreePipe: \n");
-			PrintArgVector(argv2);
+			DisplayArgs(argv2);
 		}
 	}
 	// inside child of fork 1
@@ -296,11 +296,11 @@ void ThreePipe(char** argv1, char** argv2, char** argv3, char** argv4, int backg
 		execvp(argv1[0], argv1);
 		
 		printf("Error executing in fork of ThreePipe: \n");
-		PrintArgVector(argv1);
+		DisplayArgs(argv1);
 	}
 	else
 	{
 		printf("Error executing in fork in ThreePipe: \n");
-		PrintArgVector(argv1);
+		DisplayArgs(argv1);
 	}
 }
