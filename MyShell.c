@@ -17,8 +17,8 @@ void RunShell()
 		KillZombies();
 		checkQueue();
 		PrintPrompt();
-		str = ReadInput();
-		argv = ParseInput(str);
+		str = GetInput();
+		argv = ParseI(str);
 		
 		if ((argv[0] == NULL) || CheckForIOandPipeErrors(argv) || CheckForBackgroundErrors(argv))
 		{
