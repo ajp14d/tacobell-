@@ -35,8 +35,9 @@ char* PWhitespace(char* line)
 	//flag to tell us if there is any trailing whitespace     
 	int trailing_wspace = 0;                
 	
-	do         
-	{       
+	       
+	while (current_char != '\0')
+	{
 		current_char = line[cnt++];
 		while (current_char == '\n' || current_char == '\t' || current_char == ' ')
 		{
@@ -57,7 +58,7 @@ char* PWhitespace(char* line)
 			cnt = cnt - (wspace_count - 1);   //update the count iterator if the array is changed through deletion
 		}
 		wspace_count = 0;   //set white space counter back to 0
-	}while (current_char != '\0');
+	)
 	
 	return line;
 }
