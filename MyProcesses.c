@@ -90,18 +90,18 @@ void remPro(int ind)
         }
 }
 
-struct beginPro* newPro(int firstpid, int secondpid, char* do)
+struct beginPro* newPro(int firstpid, int secondpid, char* thing)
 {
         struct beginPro* ans = (struct beginPro*)calloc(1, sizeof(struct beginPro));
         ans->firstpid = firstpid;
         ans->secondpid = secondpid;
-        ans->do = (char*)calloc(strlen(do)+1,sizeof(char));
-        strcpy(ans->do, do);
+        ans->thing = (char*)calloc(strlen(thing)+1,sizeof(char));
+        strcpy(ans->thing, thing);
         return ans;
 }
 void spacePro(struct beginPro* pro)
 {
-        free(pro->do);
+        free(pro->thing);
         free(pro);
 }
 
@@ -118,7 +118,7 @@ int checkPro(struct beginPro* pro)
                         return 0;
                         break;
                   case -1:
-                        printf("Error in child process: %s\n", pro->do);
+                        printf("Error in child process: %s\n", pro->thing);
                         break;
                 }
 
@@ -130,7 +130,7 @@ int checkPro(struct beginPro* pro)
                 return 0;
                 break;
           case -1:
-                printf("Error in child process: %s\n", pro->do);
+                printf("Error in child process: %s\n", pro->thing);
                 break;
           default:
                 return 1;
@@ -160,7 +160,7 @@ void displayProDone(const struct beginPro* pro, int loc)
 {
         if (!checkNull(pro))
         {
-                printf("[%i]+\t[%s]\n", loc, pro->do);
+                printf("[%i]+\t[%s]\n", loc, pro->thing);
         }
 }
 
