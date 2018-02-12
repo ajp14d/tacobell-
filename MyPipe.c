@@ -56,31 +56,28 @@ void MyPipe(char * args[]){
 		doThis[c] = NULL; 
 		b++; 
 		
-		if(a % 2 != 0){
-			pipe(file1); 
+		if(a % 2 == 0){
+			pipe(file2); 
 		}
 		else
-			pipe(file2); 
+			pipe(file1); 
 		
 		pid = fork(); 
 		
 		if(pid == -1){
 			if(a != cmd -1){
-				if(a % 2 != 0){
-					close(file1[1]); 
+				if(a % 2 == 0){
+					close(file2[1]); 
 				}
 				else
-					close(file2[1]); 
+					close(file1[1]); 
 			}
 			printf("error with the child process\n"); 
 			return; 
 		}
 		
 	if(pid == 0){
-		if(a == 0){
-			dup2(file2[1], STDOUT_FILENO); 
-		}
-		else if(a == cmd -1){
+		if(a == cmd -1){
 			if(cmd % 2 != 0){
 				dup2(file1[0], STDOUT_FILENO); 
 			}
@@ -88,14 +85,17 @@ void MyPipe(char * args[]){
 				dup2(file2[0], STDOUT_FILENO); 
 			}
 		}
+		else if(a == 0){
+			dup2(file2[1], STDOUT_FILENO); 
+		}
 		else{
-			if(a % 2 != 0){
-				dup2(file2[0], STDOUT_FILENO); 
-				dup2(file1[1], STDOUT_FILENO); 
-			}
-			else{
+			if(a % 2 == 0){
 				dup2(file1[0], STDOUT_FILENO); 
 				dup2(file2[1], STDOUT_FILENO); 
+			}
+			else{
+				dup2(file2[0], STDOUT_FILENO); 
+				dup2(file1[1], STDOUT_FILENO); 
 			}
 		}
 		
@@ -104,10 +104,8 @@ void MyPipe(char * args[]){
 		}
 	}
 	
-	if(a == 0){
-		close(file2[1]); 
-	}
-	else if ( a == cmd - 1){
+	if( a == cmd - 1){
+		
 		if(cmd % 2 != 0){
 			close(file1[0]); 
 		}
@@ -115,14 +113,17 @@ void MyPipe(char * args[]){
 			close(file2[0]); 
 		}
 	}
+	else if (a== 0){
+		close(file2[1]); 
+	}
 	else{
-		if(a % 2 != 0){
-			close(file2[0]); 
-			close(file1[1]); 
-		}
-		else{
+		if(a % 2 == 0){
 			close(file1[0]); 
 			close(file2[1]); 
+		}
+		else{
+			close(file2[0]); 
+			close(file1[1]); 
 		}
 	}
 	
