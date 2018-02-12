@@ -1,5 +1,5 @@
-#ifndef _PARSE_H
-#define _PARSE_H
+#ifndef _TBPARSING_H
+#define _TBPARSING_H
 
 // Takes the input from the user and returns it as a dynamic character array
 // Whoever calls this function must also free the memory
