@@ -21,7 +21,7 @@ char* PWhitespace(char* line)
 	size_t cnt = 0;       //count iterator
 	char current_char = line[cnt];   
 	
-	while ((current_char == '\t ' || current_char == '\n' || current_char == ' ') && current_char != '\0')  // delete leading whitespace
+	while ((current_char == '\t ' || current_char == '\n' || current_char == ' ') && (current_char != '\0'))  // delete leading whitespace
 	{    
 		current_char = line[++cnt];
 		wspace_count++;
