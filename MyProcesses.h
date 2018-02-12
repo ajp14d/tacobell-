@@ -17,7 +17,7 @@ struct beginPro
         // if not, this assumes the value -1
         int secondpid;
         // the cmd used to spawn the process
-        char* do;
+        char* thing;
 };
 
 // global process queue
@@ -34,7 +34,7 @@ void exitQueue();
 
 void remPro(int ind);
 
-struct beginPro* newPro(int firstpid, int secondpid, char* do);
+struct beginPro* newPro(int firstpid, int secondpid, char* thing);
 
 void spacePro(struct beginPro* pro);
 
