@@ -10,8 +10,8 @@ void OnePipe(char** argv1, char** argv2, int background, char* cmd);
 void TwoPipe(char** argv1, char** argv2, char** argv3, int background, char* cmd);
 void ThreePipe(char** argv1, char** argv2, char** argv3, char** argv4, int background, char* cmd);
 
-#ifndef _TBPARSING_H
-#define _TBPARSING_H
+#ifndef _MYPARSE_H
+#define _MYPARSE_H
 
 // Takes the input from the user and returns it as a dynamic character array
 // Whoever calls this function must also free the memory
