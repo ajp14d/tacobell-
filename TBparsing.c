@@ -28,14 +28,6 @@ char* PWhitespace(char* line)                    //ParseWhitespace
 	if (cnt > 0)    //if cnt index is more than 0
 		line = DelFunc(line, cnt - wspace_count, cnt - 1);         
 	
-	// check for empty string
-	//if (strcmp(line,"") == 0)
-	//	return line;
-	// debug message
-	/*printf("Made it through leading whitespace and deleted %i characters...\n", wspace_count);
-	printf(line);
-	printf("\n");*/
-	
 	cnt = 0;
 	wspace_count = 0;
 	
@@ -65,11 +57,6 @@ char* PWhitespace(char* line)                    //ParseWhitespace
 		}
 		wspace_count = 0;   //set white space counter back to 0
 	}while (current_char != '\0');
-	// debug message
-	/*printf("Made it through intermediate whitespace...\n", wspace_count);
-	printf(line);
-	printf("%i",strlen(line));
-	printf("\n");*/
 	
 	// bug on return                 ////////////////////////////////////////////////////////////////////////////////
 	// current guess is somewhere writing over the return address
@@ -116,7 +103,6 @@ char** PArguments(char* input)               //ParseArguments
 char** PathResolve(char** args)           //ResolvePaths                    //check if cmmnd count is correct
 {      //iterator, parent cmd type, iterator to point to current command, flag for new cmd (after | < or >)
 	int argmn_it = 0, cmnd_type = 0, cmnd_it = 0, new_cmnd = 1;	    //cmd_type, cmd_int, new_cmd 
-	//int cur_type;		// current type of args[arg_it]				[FIXED COMPILER WARNING UNUSED VAR]	
 	char* current_cmnd = args[0];     //cur_cmd
 
 	do 
@@ -139,8 +125,6 @@ char** PathResolve(char** args)           //ResolvePaths                    //ch
 			}
 		}
 		
-		//cur_type = IsCommand(args,arg_it);						[FIXED COMPILER WARNING UNUSED VAR]
-		//printf("%s	%i\n", args[arg_it], cur_type);  
 		else if (new_cmnd == 2)
 		{
 			cmnd_type = CmdCheck(args, argmn_it); 
@@ -185,33 +169,31 @@ char** PathResolve(char** args)           //ResolvePaths                    //ch
 	return args;
 }
 
-char** Expand(char** args)       //ExpandVariables   //Expands all environment variables in the command argument array
-{
-	size_t argmn_it = 0;    //argument iterator
-	size_t strng_it = 0;     //string iterator
-	//char* str = args[arg_it];
+char** Expand(char** args)       //ExpandVariables   //Expands all environment variables in the command argument array  ///
+{      //argument iterator   //string iterator
+	size_t argmn_it = 0, strng_it = 0;  
 	do 
 	{
-		char c = args[argmn_it][strng_it];
-		while (c != '\0')    //while the character doesnt equal null
+		char ch = args[argmn_it][strng_it];
+		do		
 		{
-			if (c == '$')     
+			if (ch == '$')     
 			{
 				char* environment_v = (char*)calloc(2, sizeof(char));     //env_var
-				c = args[argmn_it][++strng_it];
+				ch = args[argmn_it][++strng_it];
 				size_t counter = 1;     //count
-				if (c == '\0' || c == '$')
+				if (ch == '\0' || ch == '$')
 				{
 					free(environment_v);    //if there is $ at the end of the string or two $ in a row
 					break;
 				}
-				environment_v[0] = c;
+				environment_v[0] = ch;
 				environment_v[1] = '\0';
-				c = args[argmn_it][++strng_it];
-				while (c != '$' && c != '\0' && c != '/')
+				ch = args[argmn_it][++strng_it];
+				while (ch != '$' && ch != '\0' && ch != '/')
 				{
-					environment_v = BPushString(environment_var, c);  
-					c = args[argmn_it][++strng_it];
+					environment_v = BPushString(environment_var, ch);  
+					ch = args[argmn_it][++strng_it];
 					counter++;
 				}
 				char* retrn_environment = getenv(environment_v);    //ret_env  getenv(env_var)
@@ -223,8 +205,8 @@ char** Expand(char** args)       //ExpandVariables   //Expands all environment v
 				args[argmn_it] = CharRep(args[argmn_it], strng_it - counter - 1, strng_it - 1, retrn_environment);
 				strng_it = strng_it + strlen(environment_v);   //update iterator since string changed  				free(environment_v);
 			}
-			c = args[argmn_it][++strng_it];
-		}
+			ch = args[argmn_it][++strng_it];
+		}while (ch != '\0');    //while the character doesnt equal null
 		++argmn_it;
 		strng_it = 0;
 	}while (args[argmn_it] != NULL);
