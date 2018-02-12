@@ -1,10 +1,15 @@
 // A collection of utility functions for the project
 #ifndef _MYFUNCTIONS_H
 #define _MYFUNCTIONS_H
+#include<string.h>
+#include<stdio.h>
 #include<stdlib.h>
-#include<sys/wait.h>
+#include<unistd.h>
 #include<sys/types.h>
+#include<sys/wait.h>
 #include<sys/stat.h>
+#include<fcntl.h>
+#include<sys/time.h>
 
 // Big free
 // Deallocates the memory in a 2D character array
