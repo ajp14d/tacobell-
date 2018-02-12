@@ -5,6 +5,7 @@
 #include<string.h>      // for string functionality (strcpy)
 #include<stdio.h>       // for printing out processes
 #include<sys/wait.h>
+#include<sys/types.h>
 #include<sys/stat.h>
 #include<stdbool.h>
 
