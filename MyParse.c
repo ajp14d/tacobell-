@@ -1,5 +1,5 @@
-#include "TBparsing.h"
-#include "NewUtility.h"
+#include "MyParse.h"
+#include "MyFunctions.h"
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
