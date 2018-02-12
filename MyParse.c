@@ -188,7 +188,7 @@ char** Expand(char** args)       //Expands all environment variables in the comm
 				ch = args[argmn_it][++strng_it];
 				while (ch != '$' && ch != '\0' && ch != '/')
 				{
-					environment_v = BPushString(environment_var, ch);  
+					environment_v = BPushString(environment_v, ch);  
 					ch = args[argmn_it][++strng_it];
 					counter++;
 				}
