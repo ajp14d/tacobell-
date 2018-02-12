@@ -98,6 +98,113 @@ char** PArguments(char* input)
 	return retrn;
 }
 
+char** PathResolve(char** args)
+{
+	int arg_it = 0;		// iterator
+	int cmd_type = 0;	// parent cmd type
+	//int cur_type;		// current type of args[arg_it]				[FIXED COMPILER WARNING UNUSED VAR]
+	int cmd_it = 0;		// it to point to current command
+	int new_cmd = 1;	// flag for new cmd (after | < or >)
+	char* cur_cmd = args[0];
+
+
+	while(args[arg_it] != NULL)
+	{
+		//cur_type = IsCommand(args,arg_it);						[FIXED COMPILER WARNING UNUSED VAR]
+		//printf("%s	%i\n", args[arg_it], cur_type);
+		if (new_cmd == 1)
+		{
+			cmd_type = CmdCheck(args, arg_it);  
+			cur_cmd = args[arg_it];
+			cmd_it = arg_it;
+			new_cmd = 0;
+		}
+		else
+		{
+			if ((strcmp(args[arg_it], "|") == 0) || 
+			    (strcmp(args[arg_it], "<") == 0) ||
+			    (strcmp(args[arg_it], ">") == 0))
+			    {
+				new_cmd = 1;
+				++arg_it;
+				continue;
+			    }
+		}
+		
+		// cd
+		if (cmd_type == 2)
+		{
+			if (arg_it == (cmd_it + 1))
+			{
+				if (!CharCheck(args[arg_it], '/'))
+				{
+					if (!CharCheck(args[arg_it], '~') && !CharCheck(args[arg_it], '.'))
+					{
+						args[arg_it] = FPushString(args[arg_it], '/');
+						args[arg_it] = FPushString(args[arg_it], '.');
+					}
+				}
+				else
+				{
+					if (args[arg_it][0] != '/' &&
+						args[arg_it][0] != '.' &&
+						args[arg_it][0] != '~')
+					{
+						args[arg_it] = FPushString(args[arg_it], '/');
+						args[arg_it] = FPushString(args[arg_it], '.');
+					}
+				}
+				args[arg_it] = PathMaker(args[arg_it]);
+			}
+		}
+
+		// etime and limits
+		else if (cmd_type == 3)
+		{
+			if ((strcmp(cur_cmd, "etime") == 0) || (strcmp(cur_cmd, "limits") == 0))
+			{
+				if (arg_it == (cmd_it + 1))
+				{
+					if (CharCheck(args[arg_it], '/') == 1)
+					{
+						args[arg_it] = PathMaker(args[arg_it]);
+					}
+					else
+					{
+						args[arg_it] = PathFromEVar(args[arg_it]);
+					}
+
+					
+				}
+			}
+		}
+
+		// external commands
+		else if (cmd_type == 1)
+		{
+			if (arg_it == cmd_it)
+			{
+				if (CharCheck(args[arg_it], '/') == 1)
+				{
+					args[arg_it] = PathMaker(args[arg_it]);
+				}
+				else
+				{
+					args[arg_it] = PathFromEVar(args[arg_it]);
+				}
+			}
+		}
+	
+		
+		++arg_it;
+	}
+
+	return args;
+}
+
+
+
+/*
 char** PathResolve(char** args)           
 {      //iterator, parent cmd type, iterator to point to current command, flag for new cmd (after | < or >)
 	int argmn_it = 0, cmnd_type = 0, cmnd_it = 0, new_cmnd = 1;	  
@@ -227,6 +334,7 @@ char** ParseI(char* input)
 	free(input);    //must free all of the memory 
 	return split;      //return the newly parsed argument 
 }
+*/
 
 void OnePipe(char** argv1, char** argv2, int background, char* cmd)
 {
