@@ -3,8 +3,8 @@
 #include<sys/wait.h>
 #include<sys/types.h>
 #include<stdio.h>
-#include "background.h"
-#include "utility.h"
+#include "MyProcesses.h"
+#include "MyFunctions.h"
 
 void OnePipe(char** argv1, char** argv2, int background, char* cmd);
 void TwoPipe(char** argv1, char** argv2, char** argv3, int background, char* cmd);
