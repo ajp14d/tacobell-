@@ -271,6 +271,7 @@ char** PathResolve(char** args)
 	}while(args[argmn_it] != NULL);
 	return args;
 }
+*/
 
 char** Expand(char** args)       //Expands all environment variables in the command argument array  ///
 {      //argument iterator   //string iterator
@@ -334,7 +335,7 @@ char** ParseI(char* input)
 	free(input);    //must free all of the memory 
 	return split;      //return the newly parsed argument 
 }
-*/
+
 
 void OnePipe(char** argv1, char** argv2, int background, char* cmd)
 {
