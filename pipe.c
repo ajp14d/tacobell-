@@ -1,4 +1,16 @@
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/types.h>
+#include <signal.h>
+#include <sys/wait.h>
+
+
+#define LIMIT 256 // max number of tokens for a command
+#define MAXLINE 1024 // max number of characters from user input
+
 void pipe(char * args[]){
 	int file1[2];
 	int file2[2]; 
