@@ -204,109 +204,89 @@ char** ExecuteExternalWithOutput(char** argv, int O_loc, int background)
 
 char** ExecuteExternalWithPipe(char** argv, int pipe_count, int background)
 {
-	char* cmd = Convert(argv);
+	char* cmd = ArgvToString(argv);
 	if (background != -1)
 	{
-		argv = RemoveArr(argv, background);
+		argv = ArrayRemoveElement(argv, background);
 	}
-	switch(pipe_count){
-	case 1:
-	{
-		char** argv1 = (char**)calloc(1, sizeof(char*));
-		char** argv2 = (char**)calloc(1, sizeof(char*));
-		argv1[0] = NULL;
-		argv2[0] = NULL;
-		int it = 0;
-		while(strcmp(argv[it], "|") != 0)
-		{
-			argv1 = PBackArr(argv1, argv[it]);
-			++it;
-		}
-		++it;
-		while(argv[it] != NULL)
-		{
-			argv2 = PBackArr(argv2, argv[it]);
-			++it;
-		}
-		OnePipe(argv1, argv2, background, cmd);
-		MemFunc(argv1);
-		MemFunc(argv2);
+
+	if (pipe_count == 1 || pipe_count == 2 || pipe_count == 3)
+{
+    char** argv1 = (char**)calloc(1, sizeof(char*));
+    char** argv2 = (char**)calloc(1, sizeof(char*));
+    char** argv3 = (char**)calloc(1, sizeof(char*));
+    char** argv4 = (char**)calloc(1, sizeof(char*));
+    argv1[0] = NULL;
+    argv2[0] = NULL;
+    argv3[0] = NULL;
+    argv4[0] = NULL;
+    int it = 0;
+    while(strcmp(argv[it], "|") != 0)
+    {
+        argv1 = ArrayPushBack(argv1, argv[it]);
+        ++it;
+    }
+    ++it;
+		switch(pipe_count){
+			
+			case 1:
+        {
+            while(argv[it] != NULL)
+            {
+                argv2 = ArrayPushBack(argv2, argv[it]);
+                ++it;
+            }
+            OnePipe(argv1, argv2, background, cmd);
+            BigFree(argv1);
+            BigFree(argv2);
 		break;
-	}
-	case 2:
-	{
-		char** argv1 = (char**)calloc(1, sizeof(char*));
-		char** argv2 = (char**)calloc(1, sizeof(char*));
-		char** argv3 = (char**)calloc(1, sizeof(char*));
-		argv1[0] = NULL;
-		argv2[0] = NULL;
-		argv3[0] = NULL;
-		int it = 0;
-		while(strcmp(argv[it], "|") != 0)
-		{
-			argv1 = PBackArr(argv1, argv[it]);
-			++it;
-		}
-		++it;
-		while(strcmp(argv[it], "|") != 0)
-		{
-			argv2 = PBackArr(argv2, argv[it]);
-			++it;
-		}
-		++it;
-		while(argv[it] != NULL)
-		{
-			argv3 = PBackArr(argv3, argv[it]);
-			++it;
-		}
-		TwoPipe(argv1, argv2, argv3, background, cmd);
-		MemFunc(argv1);
-		MemFunc(argv2);
-		MemFunc(argv3);
+        }
+			case 2:
+        {
+            while(strcmp(argv[it], "|") != 0)
+            {
+                argv2 = ArrayPushBack(argv2, argv[it]);
+                ++it;
+            }
+            ++it;
+            while(argv[it] != NULL)
+            {
+                argv3 = ArrayPushBack(argv3, argv[it]);
+                ++it;
+            }
+            TwoPipe(argv1, argv2, argv3, background, cmd);
+            BigFree(argv1);
+            BigFree(argv2);
+            BigFree(argv3);
 		break;
-	}
-	case 3:
-	{
-		char** argv1 = (char**)calloc(1, sizeof(char*));
-		char** argv2 = (char**)calloc(1, sizeof(char*));
-		char** argv3 = (char**)calloc(1, sizeof(char*));
-		char** argv4 = (char**)calloc(1, sizeof(char*));
-		argv1[0] = NULL;
-		argv2[0] = NULL;
-		argv3[0] = NULL;
-		argv4[0] = NULL;
-		int it = 0;
-		while(strcmp(argv[it], "|") != 0)
-		{
-			argv1 = PBackArr(argv1, argv[it]);
-			++it;
-		}
-		++it;
-		while(strcmp(argv[it], "|") != 0)
-		{
-			argv2 = PBackArr(argv2, argv[it]);
-			++it;
-		}
-		++it;
-		while(strcmp(argv[it], "|") != 0)
-		{
-			argv3 = PBackArr(argv3, argv[it]);
-			++it;
-		}
-		++it;
-		while(argv[it] != NULL)
-		{
-			argv4 = PBackArr(argv4, argv[it]);
-			++it;
-		}
-		ThreePipe(argv1, argv2, argv3, argv4, background, cmd);
-		MemFunc(argv1);
-		MemFunc(argv2);
-		MemFunc(argv3);
-		MemFunc(argv4);
+        }
+			case 3:
+        {
+            while(strcmp(argv[it], "|") != 0)
+            {
+                argv2 = ArrayPushBack(argv2, argv[it]);
+                ++it;
+            }
+            ++it;
+            while(strcmp(argv[it], "|") != 0)
+            {
+                argv3 = ArrayPushBack(argv3, argv[it]);
+                ++it;
+            }
+            ++it;
+            while(argv[it] != NULL)
+            {
+                argv4 = ArrayPushBack(argv4, argv[it]);
+                ++it;
+            }
+            ThreePipe(argv1, argv2, argv3, argv4, background, cmd);
+            BigFree(argv1);
+            BigFree(argv2);
+            BigFree(argv3);
+            BigFree(argv4);
 		break;
-	}
-	}
+        }
+}
 	free(cmd);
 	return argv;
 }
