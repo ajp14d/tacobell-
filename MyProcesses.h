@@ -17,7 +17,7 @@ struct beginPro
         int secondpid;
         // the cmd used to spawn the process
         char* do;
-};
+}
 
 // global process queue
 #define THEQUEUE_SIZE 256
