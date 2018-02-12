@@ -1,12 +1,15 @@
 #ifndef _MYPROCESSES_H
 #define _MYPROCESSES_H
 
-#include<stdlib.h>      // for NULL decleration
-#include<string.h>      // for string functionality (strcpy)
-#include<stdio.h>       // for printing out processes
-#include<sys/wait.h>
+#include<string.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
 #include<sys/types.h>
+#include<sys/wait.h>
 #include<sys/stat.h>
+#include<fcntl.h>
+#include<sys/time.h>
 #include<stdbool.h>
 
 struct beginPro
