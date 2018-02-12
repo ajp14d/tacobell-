@@ -7,9 +7,9 @@
 char* GetInput()                         //char* ReadInput()
 {                                              //gets whatever input the user puts in
 	size_t BUFF_SIZE = 255;    //user input will be no more than 255 characters
-	char* input_s = (char*)calloc(BUFF_SIZE, sizeof(char));
-	if(fgets(input_s, (int)BUFF_SIZE, stdin))                                  
-		return input_s;                       	                                                   
+	char* input_size = (char*)calloc(BUFF_SIZE, sizeof(char));
+	if(fgets(input_size, (int)BUFF_SIZE, stdin))                                  
+		return input_size;                       	                                                   
 	else                                        
 		return NULL;
 }
@@ -20,7 +20,7 @@ char* PWhitespace(char* line)                    //ParseWhitespace
 	size_t cnt = 0;       //count iterator
 	char current_char = line[cnt];     //cur_char
 	
-	while (current_char != '\0' && (current_char == '\t ' || current_char == '\n' || current_char == ' '))  // delete leading whitespace
+	while ((current_char == '\t ' || current_char == '\n' || current_char == ' ') && current_char != '\0')  // delete leading whitespace
 	{    
 		current_char = line[++cnt];
 		wspace_count++;
@@ -112,7 +112,7 @@ char** PArguments(char* input)               //ParseArguments
 	return retrn;
 }
 
-char** PathResolve(char** args)           //ResolvePaths
+char** PathResolve(char** args)           //ResolvePaths                    //check if cmmnd count is correct
 {      //iterator, parent cmd type, iterator to point to current command, flag for new cmd (after | < or >)
 	int argmn_it = 0, cmnd_type = 0, cmnd_it = 0, new_cmnd = 1;	    //cmd_type, cmd_int, new_cmd 
 	//int cur_type;		// current type of args[arg_it]				[FIXED COMPILER WARNING UNUSED VAR]	
@@ -162,28 +162,22 @@ char** PathResolve(char** args)           //ResolvePaths
 		{
 			if ((strcmp(current_cmnd, "etime") == 0) || (strcmp(current_cmnd, "limits") == 0))
 			{
-				if (argmn_it == (cmnd_it + 1))
-				{
-					if (CharCheck(args[argmn_it], '/') == 1)
-						args[argmn_it] = PathMaker(args[argmn_it]);
-					else
-						args[argmn_it] = PathFromEVar(args[argmn_it]);
-
-					//args[arg_it] = BuildPath(args[arg_it]);
-				}
+				if (argmn_it == (cmnd_it + 1) && (CharCheck(args[argmn_it], '/') == 1))   //////
+					args[argmn_it] = PathMaker(args[argmn_it]);
+				
+				else if (argmn_it == (cmnd_it + 1))
+					 args[argmn_it] = PathFromEVar(args[argmn_it]);
 			}
 		}
 
 		// external commands
-		else if (cmnd_type == 1)     //if the commands chosen are external
+		else if (cmnd_type == 1)     //if the commands chosen are external       /////
 		{
-			if (argmn_it == cmnd_it)
-			{
-				if (CharCheck(args[argmn_it], '/') == 1)
-					args[argmn_it] = PathMaker(args[argmn_it]);
-				else
-					args[argmn_it] = PathFromEVar(args[argmn_it]);
-			}
+			if (argmn_it == cmnd_it && (CharCheck(args[argmn_it], '/') == 1))     ///
+				args[argmn_it] = PathMaker(args[argmn_it]);
+			
+			else if (argmn_it == cmnd_it)
+				args[argmn_it] = PathFromEVar(args[argmn_it]);
 		}
 		++argmn_it;
 	}while(args[argmn_it] != NULL);
