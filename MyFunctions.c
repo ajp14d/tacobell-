@@ -1032,6 +1032,7 @@ int checkZero(int tocheck)
 	else
 		return 0;
 }
+	/*
 
 void KillZombies() {
 
@@ -1045,4 +1046,6 @@ void KillZombies() {
             break;
 
 }
+*/
+	
 
