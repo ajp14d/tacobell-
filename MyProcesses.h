@@ -33,8 +33,7 @@ void exitQueue();
 
 void remPro(int ind);
 
-struct beginPro* newPro(int firstpid, int secondpid,
-        char* do);
+struct beginPro* newPro(int firstpid, int secondpid, char* do);
 
 void spacePro(struct beginPro* pro);
 
