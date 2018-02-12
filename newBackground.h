@@ -1,5 +1,5 @@
-#ifndef _BACKGROUND_H
-#define _BACKGROUND_H
+#ifndef _NEWBACKGROUND_H
+#define _NEWBACKGROUND_H
 
 #include<stdlib.h>      // for NULL decleration
 #include<string.h>      // for string functionality (strcpy)
