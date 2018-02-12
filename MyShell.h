@@ -1,5 +1,5 @@
-#ifndef _SHELL_H
-#define _SHELL_H
+#ifndef _MYSHELL_H
+#define _MYSHELL_H
 #include<string.h>
 #include<stdio.h>
 #include<stdlib.h>
@@ -8,10 +8,9 @@
 #include<sys/wait.h>
 #include<fcntl.h>
 #include<sys/time.h>
-#include "utility.h"
-#include "parse.h"
-#include "background.h"
-#include "pipe.h"
+#include "MyFunctions.h"
+#include "MyParse.h"
+#include "MyProcesses.h"
 
 // For each function in here
 // int background is a flag to run the process in the background (-1) for foreground
