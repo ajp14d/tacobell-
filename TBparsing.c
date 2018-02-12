@@ -62,7 +62,7 @@ char* PWhitespace(char* line)
 }
 
 // Converts the line input from the user into the array of command arguments.
-char** PArguments(char* input)               //ParseArguments
+char** PArguments(char* input)            
 {
 	size_t cnt = 0;
 	char ch = input[cnt];
@@ -143,7 +143,7 @@ char** PathResolve(char** args)
 		{
 			if ((strcmp(current_cmnd, "etime") == 0) || (strcmp(current_cmnd, "limits") == 0))
 			{
-				if (argmn_it == (cmnd_it + 1) && (CharCheck(args[argmn_it], '/') == 1))   //////
+				if (argmn_it == (cmnd_it + 1) && (CharCheck(args[argmn_it], '/') == 1))   
 					args[argmn_it] = PathMaker(args[argmn_it]);
 				
 				else if (argmn_it == (cmnd_it + 1))
