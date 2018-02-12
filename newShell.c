@@ -196,10 +196,10 @@ char** ExecuteExternalWithOutput(char** argv, int O_loc, int background)
 
 char** ExecuteExternalWithPipe(char** argv, int pipe_count, int background)
 {
-	char* cmd = ArgvToString(argv);
+	char* cmd = Convert(argv);
 	if (background != -1)
 	{
-		argv = ArrayRemoveElement(argv, background);
+		argv = RemoveArr(argv, background);
 	}
 
 	if (pipe_count == 1 || pipe_count == 2 || pipe_count == 3)
@@ -215,7 +215,7 @@ char** ExecuteExternalWithPipe(char** argv, int pipe_count, int background)
     int it = 0;
     while(strcmp(argv[it], "|") != 0)
     {
-        argv1 = ArrayPushBack(argv1, argv[it]);
+        argv1 = PBackArr(argv1, argv[it]);
         ++it;
     }
     ++it;
@@ -225,57 +225,57 @@ char** ExecuteExternalWithPipe(char** argv, int pipe_count, int background)
         {
             while(argv[it] != NULL)
             {
-                argv2 = ArrayPushBack(argv2, argv[it]);
+                argv2 = PBackArr(argv2, argv[it]);
                 ++it;
             }
             OnePipe(argv1, argv2, background, cmd);
-            BigFree(argv1);
-            BigFree(argv2);
+            MemFunc(argv1);
+            MemFunc(argv2);
 		break;
         }
 			case 2:
         {
             while(strcmp(argv[it], "|") != 0)
             {
-                argv2 = ArrayPushBack(argv2, argv[it]);
+                argv2 = PBackArr(argv2, argv[it]);
                 ++it;
             }
             ++it;
             while(argv[it] != NULL)
             {
-                argv3 = ArrayPushBack(argv3, argv[it]);
+                argv3 = PBackArr(argv3, argv[it]);
                 ++it;
             }
             TwoPipe(argv1, argv2, argv3, background, cmd);
-            BigFree(argv1);
-            BigFree(argv2);
-            BigFree(argv3);
+            MemFunc(argv1);
+            MemFunc(argv2);
+            MemFunc(argv3);
 		break;
         }
 			case 3:
         {
             while(strcmp(argv[it], "|") != 0)
             {
-                argv2 = ArrayPushBack(argv2, argv[it]);
+                argv2 = PBackArr(argv2, argv[it]);
                 ++it;
             }
             ++it;
             while(strcmp(argv[it], "|") != 0)
             {
-                argv3 = ArrayPushBack(argv3, argv[it]);
+                argv3 = PBackArr(argv3, argv[it]);
                 ++it;
             }
             ++it;
             while(argv[it] != NULL)
             {
-                argv4 = ArrayPushBack(argv4, argv[it]);
+                argv4 = PBackArr(argv4, argv[it]);
                 ++it;
             }
             ThreePipe(argv1, argv2, argv3, argv4, background, cmd);
-            BigFree(argv1);
-            BigFree(argv2);
-            BigFree(argv3);
-            BigFree(argv4);
+            MemFunc(argv1);
+            MemFunc(argv2);
+            MemFunc(argv3);
+            MemFunc(argv4);
 		break;
         }
 }
