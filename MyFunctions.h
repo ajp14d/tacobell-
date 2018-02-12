@@ -2,6 +2,7 @@
 #ifndef _MYFUNCTIONS_H
 #define _MYFUNCTIONS_H
 #include<stdlib.h>
+#include<sys/wait.h>
 #include<sys/types.h>
 #include<sys/stat.h>
 
