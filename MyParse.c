@@ -22,10 +22,10 @@ char* PWhitespace(char* line)
 	char current_char = line[cnt];   
 	
 	while ((current_char == '\t ' || current_char == '\n' || current_char == ' ') && (current_char != '\0'))  // delete leading whitespace
-	{    
+	(    
 		current_char = line[++cnt];
 		wspace_count++;
-	}
+	)
 	if (cnt > 0)    //if cnt index is more than 0
 		line = DelFunc(line, cnt - wspace_count, cnt - 1);         
 	
@@ -40,12 +40,12 @@ char* PWhitespace(char* line)
 	(
 		current_char = line[cnt++];
 		while (current_char == '\n' || current_char == '\t' || current_char == ' ')
-		{
+		(
 			current_char = line[cnt++];
 			wspace_count++;
 			if (current_char == '\0')
 				trailing_wspace = 1;
-		}
+		)
 		if (trailing_wspace == 1)   //if there is trailing whitespace
 		{
 			if (wspace_count > 0)   //if that whitespace is greater than 0
