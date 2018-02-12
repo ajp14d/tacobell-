@@ -227,8 +227,6 @@ char** ParseI(char* input)
 	return split;      //return the newly parsed argument 
 }
 
-#include "pipe.h"
-
 void OnePipe(char** argv1, char** argv2, int background, char* cmd)
 {
 	int status;
