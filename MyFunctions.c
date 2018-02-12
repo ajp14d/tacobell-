@@ -721,6 +721,7 @@ char** ExecuteExternalWithPipe(char** argv, int pipe_count, int background)
 }
 	free(cmd);
 	return argv;
+	}
 }
 
 void IORedirect(char** argv, int dir, char* filename, int background, char* cmd)
