@@ -1,6 +1,6 @@
 // A collection of utility functions for the project
-#ifndef _UTILITY_H
-#define _UTILITY_H
+#ifndef _MYFUNCTIONS_H
+#define _MYFUNCTIONS_H
 #include<stdlib.h>
 #include<sys/stat.h>
 
