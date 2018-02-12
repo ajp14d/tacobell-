@@ -123,7 +123,7 @@ int checkPro(struct beginPro* pro)
                 }
 
         }
-        waitpid_ans = waitpid(p->firstpid, &now, WNOHANG);
+        waitpid_ans = waitpid(pro->firstpid, &now, WNOHANG);
 
         switch(waitpid_ans){
           case 0:
@@ -145,7 +145,7 @@ void displayProStart(const struct beginPro* pro, int loc)
 {
         if (!checkNull(pro))
         {
-                if (pro->second != -1)
+                if (pro->secondpid != -1)
                 {
                         printf("[%i]\t[%i][%i]\n", loc, pro->firstpid, pro->secondpid);
                 }
