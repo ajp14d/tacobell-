@@ -1,12 +1,15 @@
 #ifndef _MYPARSE_H
 #define _MYPARSE_H
 
-#include<unistd.h>
-#include<stdlib.h>
-#include<sys/wait.h>
-#include<sys/types.h>
-#include<sys/stat.h>
+#include<string.h>
 #include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<sys/types.h>
+#include<sys/wait.h>
+#include<sys/stat.h>
+#include<fcntl.h>
+#include<sys/time.h>
 #include "MyProcesses.h"
 #include "MyFunctions.h"
 
