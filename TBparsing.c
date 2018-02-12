@@ -86,7 +86,7 @@ char** PArguments(char* input)               //ParseArguments
 
 	while (ch != '\0')
 	{
-		if ((ch == '\n ') || (ch == ' ') || (ch == '\t'))
+		if ((ch == '\n') || (ch == ' ') || (ch == '\t'))
 			tokn_c++;
 		ch = input[++cnt];
 	}
@@ -94,6 +94,7 @@ char** PArguments(char* input)               //ParseArguments
 	char* temp = strtok(input, " \n\t");    //tmp  //tokenize the input line   ///////////////////////////////////////////
 	//char* temp; 
 	//sscanf(input, "%s \n\t", temp);
+	//isspace
 	char** retrn = (char**)calloc(tokn_c + 1, sizeof(char*));    //char** ret  //allocate memory
 
 	if (temp != NULL)
