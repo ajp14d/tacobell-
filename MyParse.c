@@ -6,7 +6,7 @@
 #include<string.h>
 
 char* GetInput()                         
-{       
+{     
 	/*                                    
 	size_t BUFF_SIZE = 255;    //user input will be no more than 255 characters
 	char* input_size = (char*)calloc(BUFF_SIZE, sizeof(char));
@@ -16,7 +16,7 @@ char* GetInput()
 		return NULL;
 	*/	
 	
-	size_t BUFFER_SIZE = 512;
+	size_t BUFFER_SIZE = 550;
 	char* input_string = (char*)calloc(BUFFER_SIZE, sizeof(char));
 	if(fgets(input_string, (int)BUFFER_SIZE, stdin))
 	{
@@ -30,24 +30,24 @@ char* GetInput()
 
 char* PWhitespace(char* line)                   
 {
-	/*
+	
   	int wspace_count = 0;      //whitespace_count
 	size_t cnt = 0;       //count iterator
 	char current_char = line[cnt];   
+	//flag to tell us if there is any trailing whitespace     
+	int trailing_wspace = 0;                
+	
 	
 	while ((current_char == '\t ' || current_char == '\n' || current_char == ' ') && (current_char != '\0'))  // delete leading whitespace
 	(    
 		current_char = line[++cnt];
 		wspace_count++;
 	)
-	if (cnt > 0)    //if cnt index is more than 0
+	if (cnt !< 0)    //if cnt index is more than 0
 		line = DelFunc(line, cnt - wspace_count, cnt - 1);         
 	
 	cnt = 0;
 	wspace_count = 0;
-	
-	//flag to tell us if there is any trailing whitespace     
-	int trailing_wspace = 0;                
 	
 	       
 	while (current_char != '\0')
@@ -60,117 +60,29 @@ char* PWhitespace(char* line)
 			if (current_char == '\0')
 				trailing_wspace = 1;
 		)
-		if (trailing_wspace == 1)   //if there is trailing whitespace
-		{
-			if (wspace_count > 0)   //if that whitespace is greater than 0
-				line = DelFunc(line, cnt - wspace_count - 1, cnt - 2);  //delete the whitespace   
-			break;
-		}
-		else if (wspace_count > 1)
+		if (wspace_count > 1) //if there is trailing whitespace
 		{
 			line = DelFunc(line, cnt - wspace_count - 1, cnt - 3);   //delete the whitespace 
 			cnt = cnt - (wspace_count - 1);   //update the count iterator if the array is changed through deletion
+		
+		}
+		else if(trailing_wspace == 1)  
+		{
+			
+			if (wspace_count > 0)   //if that whitespace is greater than 0
+				line = DelFunc(line, cnt - wspace_count - 1, cnt - 2);  //delete the whitespace   
+			break;
 		}
 		wspace_count = 0;   //set white space counter back to 0
 	)
 	
 	return line;
-	*/
-	
-		size_t it = 0;
-	int whitespace_count = 0;
-	char cur_char = line[it];
-	
-	// delete leading whitespace
-	while (cur_char != '\0' && (cur_char == ' ' || cur_char == '\t' || cur_char == '\n'))
-	{
-		cur_char = line[++it];
-		whitespace_count++;
-	}
-	if (it > 0)
-		line = DelFunc(line, it-whitespace_count, it-1);
-	
-	
-	
-	it = 0;
-	whitespace_count = 0;
-	
-	// need flag to determine if currently operating on
-	// trailing whitespace
-	int contains_trailing = 0;
-	// delete intermediate extra whitespace
-	while (cur_char != '\0')
-	{
-		cur_char = line[it++];
-		while (cur_char == ' ' || cur_char == '\t' || cur_char == '\n')
-		{
-			whitespace_count++;
-			cur_char = line[it++];
-			if (cur_char == '\0')
-				contains_trailing = 1;
-		}
-		if (contains_trailing == 1)
-		{
-			if (whitespace_count > 0)
-			{
-				line = DelFunc(line, it-whitespace_count-1, it-2);
-			}
-			break;
-		}
-		else if (whitespace_count > 1)
-		{
-			line = DelFunc(line, it-whitespace_count-1, it-3);
-			// must update iterator if array is changed through deletion
-			it = it - (whitespace_count - 1);
-		}
-		whitespace_count = 0;
-	}
-	
-	
-	return line;
 }
+
 
 // Converts the line input from the user into the array of command arguments.
 char** PArguments(char* input)            
 {
-	size_t it = 0;
-	char c = input[it];
-	int token_count = 1;
-
-	while (c != '\0')
-	{
-		if ((c == ' ') || (c == '\n') || (c == '\t'))
-		{
-			token_count++;
-		}
-		c = input[++it];
-	}
-
-	int i = 0;
-
-	char** ret = (char**)calloc(token_count + 1, sizeof(char*));
-
-	char* tmp = strtok(input, " \n\t");
-
-	if (tmp != NULL)
-	{
-		ret[i] = (char*)calloc(strlen(tmp)+1, sizeof(char));
-		strcpy(ret[i], tmp);
-	}
-	for (i = 1; i < token_count; i++)
-	{
-		tmp = strtok(NULL, " \n\t");
-		ret[i] = (char*)calloc(strlen(tmp)+1, sizeof(char));
-		strcpy(ret[i], tmp);
-	}
-
-	ret[i] = NULL;
-
-	return ret;
-	
-	
-	
-/*
 	size_t cnt = 0;
 	char ch = input[cnt];
 	int tokn_c = 1, i = 0;                 //token_count  
@@ -193,7 +105,8 @@ char** PArguments(char* input)
 		retrn[i] = (char*)calloc(strlen(temp) + 1, sizeof(char));
 		strcpy(retrn[i], temp);
 	}
-	for (i = 1; i < tokn_c; i++)
+	//for (i = 1; i < tokn_c; i++)
+	while(i < tokn_c)
 	{
 		temp = strtok(NULL, " \n\t");///////////////////////////////////////////////////////////////
 		//sscanf(NULL, "%s \n\t", temp);
@@ -201,54 +114,71 @@ char** PArguments(char* input)
 		strcpy(retrn[i], temp);
 	}
 	retrn[i] = NULL;
-	return retrn;
-*/	
+	return retrn;	
 }
 
-char** PathResolve(char** args)
-{
-	int arg_it = 0;		// iterator
-	int cmd_type = 0;	// parent cmd type
-	//int cur_type;		// current type of args[arg_it]				[FIXED COMPILER WARNING UNUSED VAR]
-	int cmd_it = 0;		// it to point to current command
-	int new_cmd = 1;	// flag for new cmd (after | < or >)
-	char* cur_cmd = args[0];
+char** PathResolve(char** args)           
+{      //iterator, parent cmd type, iterator to point to current command, flag for new cmd (after | < or >)
+	int argmn_it = 0, cmnd_type = 0, cmnd_it = 0, new_cmnd = 1;	  
+	char* current_cmnd = args[0];     
 
-
+	
 	while(args[arg_it] != NULL)
 	{
 		//cur_type = IsCommand(args,arg_it);						[FIXED COMPILER WARNING UNUSED VAR]
 		//printf("%s	%i\n", args[arg_it], cur_type);
-		if (new_cmd == 1)
+		if (new_cmd != 1)
 		{
-			cmd_type = CmdCheck(args, arg_it);  
-			cur_cmd = args[arg_it];
-			cmd_it = arg_it;
-			new_cmd = 0;
-		}
-		else
-		{
-			if ((strcmp(args[arg_it], "|") == 0) || 
-			    (strcmp(args[arg_it], "<") == 0) ||
-			    (strcmp(args[arg_it], ">") == 0))
+			if ((strcmp(args[arg_it], "<") == 0) || 
+			    (strcmp(args[arg_it], ">") == 0) ||
+			    (strcmp(args[arg_it], "|") == 0))
 			    {
 				new_cmd = 1;
 				++arg_it;
 				continue;
 			    }
 		}
+		else
+		{
+			cmd_type = IsCommand(args, arg_it);  
+			cur_cmd = args[arg_it];
+			cmd_it = arg_it;
+			new_cmd = 0;
+		}
 		
 		// cd
-		if (cmd_type == 2)
+		if (cmd_type == 3)
 		{
+			if ((strcmp(cur_cmd, "etime") == 0) || (strcmp(cur_cmd, "limits") == 0))
+			{
+				if (arg_it == (cmd_it + 1))
+				{
+					if (ContainsChar(args[arg_it], '/') == 1)
+					{
+						args[arg_it] = BuildPath(args[arg_it]);
+					}
+					else
+					{
+						args[arg_it] = PathEnvBuildPath(args[arg_it]);
+					}
+
+					//args[arg_it] = BuildPath(args[arg_it]);
+				}
+			}
+		}
+
+		// etime and limits
+		else if (cmd_type == 2)
+		{
+			
 			if (arg_it == (cmd_it + 1))
 			{
-				if (!CharCheck(args[arg_it], '/'))
+				if (!ContainsChar(args[arg_it], '/'))
 				{
-					if (!CharCheck(args[arg_it], '~') && !CharCheck(args[arg_it], '.'))
+					if (!ContainsChar(args[arg_it], '~') && !ContainsChar(args[arg_it], '.'))
 					{
-						args[arg_it] = FPushString(args[arg_it], '/');
-						args[arg_it] = FPushString(args[arg_it], '.');
+						args[arg_it] = DynStrPushFront(args[arg_it], '/');
+						args[arg_it] = DynStrPushFront(args[arg_it], '.');
 					}
 				}
 				else
@@ -257,33 +187,13 @@ char** PathResolve(char** args)
 						args[arg_it][0] != '.' &&
 						args[arg_it][0] != '~')
 					{
-						args[arg_it] = FPushString(args[arg_it], '/');
-						args[arg_it] = FPushString(args[arg_it], '.');
+						args[arg_it] = DynStrPushFront(args[arg_it], '/');
+						args[arg_it] = DynStrPushFront(args[arg_it], '.');
 					}
 				}
-				args[arg_it] = PathMaker(args[arg_it]);
+				args[arg_it] = BuildPath(args[arg_it]);
 			}
-		}
-
-		// etime and limits
-		else if (cmd_type == 3)
-		{
-			if ((strcmp(cur_cmd, "etime") == 0) || (strcmp(cur_cmd, "limits") == 0))
-			{
-				if (arg_it == (cmd_it + 1))
-				{
-					if (CharCheck(args[arg_it], '/') == 1)
-					{
-						args[arg_it] = PathMaker(args[arg_it]);
-					}
-					else
-					{
-						args[arg_it] = PathFromEVar(args[arg_it]);
-					}
-
-					
-				}
-			}
+		
 		}
 
 		// external commands
@@ -291,13 +201,13 @@ char** PathResolve(char** args)
 		{
 			if (arg_it == cmd_it)
 			{
-				if (CharCheck(args[arg_it], '/') == 1)
+				if (ContainsChar(args[arg_it], '/') == 1)
 				{
-					args[arg_it] = PathMaker(args[arg_it]);
+					args[arg_it] = BuildPath(args[arg_it]);
 				}
 				else
 				{
-					args[arg_it] = PathFromEVar(args[arg_it]);
+					args[arg_it] = PathEnvBuildPath(args[arg_it]);
 				}
 			}
 		}
@@ -309,76 +219,6 @@ char** PathResolve(char** args)
 	return args;
 }
 
-
-
-/*
-char** PathResolve(char** args)           
-{      //iterator, parent cmd type, iterator to point to current command, flag for new cmd (after | < or >)
-	int argmn_it = 0, cmnd_type = 0, cmnd_it = 0, new_cmnd = 1;	  
-	char* current_cmnd = args[0];     
-
-	do 
-	{          // cd
-		if (cmnd_type == 1)    //if the command is cd
-		{
-			if (argmn_it == (cmnd_it + 1))
-			{
-				if (!CharCheck(args[argmn_it], '/') && !CharCheck(args[argmn_it], '~') && !CharCheck(args[argmn_it], '.'))   
-				{
-					args[argmn_it] = FPushString(args[argmn_it], '/');
-					args[argmn_it] = FPushString(args[argmn_it], '.');
-				}
-				else if (args[argmn_it][0] != '.' && args[argmn_it][0] != '~' && args[argmn_it][0] != '/')
-				{
-					args[argmn_it] = FPushString(args[argmn_it], '/');
-					args[argmn_it] = FPushString(args[argmn_it], '.');
-				}
-				args[argmn_it] = PathMaker(args[argmn_it]);   
-			}
-		}
-		
-		else if (new_cmnd == 2)
-		{
-			cmnd_type = CmdCheck(args, argmn_it); 
-			current_cmnd = args[argmn_it];
-			cmnd_it = argmn_it;
-			new_cmnd = 0;
-		}
-		else                                        
-		{
-			if ((strcmp(args[argmn_it], "<") == 0) || (strcmp(args[argmn_it], ">") == 0) || (strcmp(args[argmn_it], "|") == 0))
-			{
-				new_cmnd = 1;
-				++argmn_it;
-				continue;
-			}
-		}
-		
-		if (cmnd_type == 3)    //if the command chosen is etime or limits
-		{
-			if ((strcmp(current_cmnd, "etime") == 0) || (strcmp(current_cmnd, "limits") == 0))
-			{
-				if (argmn_it == (cmnd_it + 1) && (CharCheck(args[argmn_it], '/') == 1))   
-					args[argmn_it] = PathMaker(args[argmn_it]);
-				
-				else if (argmn_it == (cmnd_it + 1))
-					 args[argmn_it] = PathFromEVar(args[argmn_it]);
-			}
-		}
-
-		else if (cmnd_type == 1)     //if the commands chosen are external      
-		{
-			if (argmn_it == cmnd_it && (CharCheck(args[argmn_it], '/') == 1))    
-				args[argmn_it] = PathMaker(args[argmn_it]);
-			
-			else if (argmn_it == cmnd_it)
-				args[argmn_it] = PathFromEVar(args[argmn_it]);
-		}
-		++argmn_it;
-	}while(args[argmn_it] != NULL);
-	return args;
-}
-*/
 
 char** Expand(char** args)       //Expands all environment variables in the command argument array  ///
 {      //argument iterator   //string iterator
