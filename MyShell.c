@@ -231,7 +231,74 @@ char** ExecuteExternalWithPipe(char** argv, int pipe_count, int background)
                 argv2 = PBackArr(argv2, argv[it]);
                 ++it;
             }
-            OnePipe(argv1, argv2, background, cmd);
+            //OnePipe(argv1, argv2, background, cmd);
+		
+		int status;
+	int p1_to_p2[2];
+	pipe(p1_to_p2);
+	
+	// fork1
+	pid_t c1PID = fork();
+	
+	// parent of fork1
+	if (c1PID > 0)
+	{
+		pid_t c2PID = fork();
+		// parent of fork2
+		if (c2PID > 0)
+		{
+			close(3);
+			close(4);
+			if (background != -1)
+			{
+				waitpid(c2PID, &status, WNOHANG);
+				waitpid(c1PID, &status, WNOHANG);
+				handleQueue(newPro(c1PID, c2PID, cmd));
+			}
+			else
+			{
+				waitpid(c2PID, &status, 0);
+				waitpid(c1PID, &status, 0);
+			}
+		}
+		// child of fork2
+		else if(c2PID == 0)
+		{
+			close(0);
+			dup(3);
+			close(3);
+			close(4);
+			execvp(argv2[0], argv2);
+			
+			printf("Error executing in fork in OnePipe: \n");
+			DisplayArgs(argv2);
+		}
+		else
+		{
+			printf("Error executing in fork in OnePipe: \n");
+			DisplayArgs(argv2);
+		}
+		
+	}
+	// in child of fork1
+	else if (c1PID == 0)
+	{
+		// close stdout
+		close(1);
+		dup(4);
+		close(3);
+		close(4);
+		execvp(argv1[0], argv1);
+		
+		printf("Error executing in fork in OnePipe: \n");
+		DisplayArgs(argv1);
+	}
+	else
+	{
+		printf("Error in fork1 of OnePipe()\n");
+	}
+		
+		
             MemFunc(argv1);
             MemFunc(argv2);
 		break;
