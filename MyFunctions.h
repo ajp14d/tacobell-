@@ -10,6 +10,7 @@
 #include<sys/stat.h>
 #include<fcntl.h>
 #include<sys/time.h>
+#include "pipe.h"
 
 // Big free
 // Deallocates the memory in a 2D character array
