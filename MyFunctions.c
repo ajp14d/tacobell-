@@ -161,12 +161,14 @@ int CmdCheck(char** args, int a)
 {
 	static char* cmdsInclude[6] = {"exit", "echo", "cd", "etime", "limits", NULL}; // static sets scope
 
-	if (strcmp(args[a], "cd") != 0)
+	if ((strcmp(args[a], "cd") != 0) && (strcmp(args[a], "etime") != 0) && (strcmp(args[a], "limits") != 0))
 	{
+		
 		if (CmdVal(args[a]))
 			return 1;
 	}
-	
+	else
+	{
 	if (strcmp(args[a], "cd") == 0)
 		return 2;
 
@@ -181,7 +183,7 @@ int CmdCheck(char** args, int a)
 		}
 		temp = cmdsInclude[++obj];
 	}
-
+	}
 	return 0;
 
 }	
