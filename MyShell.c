@@ -98,6 +98,60 @@ void RunShell()
 	}
 }
 
+void Limits(char** argv)
+{
+	int childID;
+	int status;
+
+	int line_count = 0;
+
+	char file[256] = "/proc/";
+	char PID[256];
+	char location[256] = "/io";
+	char limit_string[256];
+
+	pid_t childPID = fork();
+
+	switch(checkZero(childPID)){
+	case 2:
+	{
+		execv(argv[0], argv);
+		printf("Trouble executing: \n");
+		DisplayArgs(argv);
+		exit(1);
+		break;
+	}
+	case 1:
+	{
+		waitpid(childPID, &status, 0);
+		childID = getpid();
+		sprintf(PID, "%i", childID);
+		strcat(file, PID);
+		strcat(file, location);
+		FILE* limit_file;
+		limit_file = fopen(file, "r");
+
+		while(fgets(limit_string, sizeof(limit_string), limit_file))
+		{
+			if ((line_count == 3) || (line_count == 7) ||
+			    (line_count == 8) || (line_count == 12))
+			    {
+				printf("%s", limit_string);
+			    }
+			line_count++;
+		}
+		fclose(limit_file);
+		break;
+	}
+	case 0:
+	{
+		printf("Fork failed in Limits()\n");
+		exit(1);
+		break;
+	}
+	}
+}
+
 void ETime(char** argv)
 {
 	int status;
