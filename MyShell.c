@@ -203,8 +203,8 @@ char** ExecuteExternalWithPipe(char** argv, int pipe_count, int background)
 	{
 		argv = RemoveArr(argv, background);
 	}
-	handlePipe(pipe_count);
-/*
+	
+
 	if (pipe_count == 1 || pipe_count == 2 || pipe_count == 3)
 {
     char** argv1 = (char**)calloc(1, sizeof(char*));
@@ -283,7 +283,7 @@ char** ExecuteExternalWithPipe(char** argv, int pipe_count, int background)
         }
 
 	}
-}*/
+}
 	free(cmd);
 	return argv;
 	
