@@ -29,9 +29,7 @@ char* GetInput()
 	}
 }
 
-char* PWhitespace(char* line)                   
-{
-	char* ParseWhitespace(char* line)
+char* ParseWhitespace(char* line)
 {
 	size_t it = 0;
 	int wspace_count = 0;
