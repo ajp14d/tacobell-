@@ -102,7 +102,7 @@ char* Convert(char** argv);
 // ArgvCountSymbol
 // Counts the number of times a string appears in an argument vector
 int CountStr(char** argv, const char* s);
-
+/*
 void ChangeDirectory(const char* dir);
 
 
@@ -125,14 +125,14 @@ int CheckForIOandPipeErrors(char** argv);
 int CheckForBackgroundErrors(char** argv);
 
 void PrintPrompt();
-/*
+
 void Limits(char** argv);
 
 void ETime(char** argv);
-*/
+
 int checkZero(int tocheck);
 
 void KillZombies();
-
+*/
 
 #endif
