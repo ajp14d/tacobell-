@@ -620,8 +620,9 @@ void KillZombies() {
 
 }
 
-void handlePipe(int pnum)
+void handlePipe(int pipe_count)
 {
+	
 	if (pipe_count == 1 || pipe_count == 2 || pipe_count == 3)
 {
     char** argv1 = (char**)calloc(1, sizeof(char*));
