@@ -506,7 +506,92 @@ void PrintPrompt()
 	printf("%s@%s: %s => ", user_out, machine_out, directory_out);
 }
 
+void Limits(char** argv)
+{
+	int childID;
+	int status;
 
+	int line_count = 0;
+
+	char file[256] = "/proc/";
+	char PID[256];
+	char location[256] = "/io";
+	char limit_string[256];
+
+	pid_t childPID; 
+	childPID = fork();
+
+	switch(checkZero(childPID)){
+	case 2:
+	{
+		execv(argv[0], argv);
+		printf("Trouble executing: \n");
+		PrintArgVector(argv);
+		exit(1);
+		break;
+	}
+	case 1:
+	{
+		waitpid(childPID, &status, 0);
+		childID = getpid();
+		sprintf(PID, "%i", childID);
+		strcat(file, PID);
+		strcat(file, location);
+		FILE* limit_file;
+		limit_file = fopen(file, "r");
+
+		while(fgets(limit_string, sizeof(limit_string), limit_file))
+		{
+			if ((line_count == 3) || (line_count == 7) ||
+			    (line_count == 8) || (line_count == 12))
+			    {
+				printf("%s", limit_string);
+			    }
+			line_count++;
+		}
+		fclose(limit_file);
+		break;
+	}
+	case 0:
+	{
+		printf("Fork failed in Limits()\n");
+		exit(1);
+		break;
+	}
+	}
+}
+
+void ETime(char** argv)
+{
+	int status;
+	struct timeval timeofday;
+	gettimeofday(&timeofday, NULL);
+	double beginning_time=timeofday.tv_sec+(timeofday.tv_usec/1000000.0);
+
+	pid_t childPID = fork();
+
+	switch(checkZero(childPID)){
+	  case 2:
+	  {
+		execv(argv[0], argv);
+                printf("Trouble executing: \n");
+                PrintArgVector(argv);
+                exit(1);
+		break;
+	  }
+	  case 1:
+		waitpid(childPID, &status, 0);
+		break;
+	  case 0:
+		printf("Fork failed in ETime\n");
+		break;
+	}
+
+
+	gettimeofday(&timeofday, NULL);
+	double finishing_time=timeofday.tv_sec+(timeofday.tv_usec/1000000.0);
+	printf("Elapsed Time: %f\n", finishing_time-beginning_time);
+}
 
 int checkZero(int tocheck)
 {
