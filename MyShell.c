@@ -34,14 +34,25 @@ void startMyShell()
 		}
 		else if (strcmp(argv[0], "cd") == 0)
 		{
-			
+			/*
 			if (GetSize(argv) == 2)
 					dirChange(argv[1]);
 			else if (GetSize(argv) < 2)
 					dirChange(getenv("HOME"));
 			else	
 				printf("There are too many arguments after cd\n");
-			
+			*/
+			if (GetSize(argv) <= 2)
+			{
+				if (GetSize(argv) == 2)
+					dirChange(argv[1]);
+				else
+					dirChange(getenv("HOME"));
+			}
+			else
+			{
+				printf("Too many arguments...\n");
+			}
 			
 			
 		}
