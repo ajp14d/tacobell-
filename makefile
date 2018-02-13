@@ -1,5 +1,5 @@
 all:  MyParse.o MyFunctions.o  MyShell.o MyProcesses.o 
-	gcc -Wall -pedantic -std=c99 -g -o MyShell.x  MyParse.o MyFunctions.o  MyShell.o MyProcesses.o 
+	gcc -Wall -pedantic -std=c99 -g MyShell.x  MyParse.o MyFunctions.o  MyShell.o MyProcesses.o 
 
 MyParse.o: MyParse.c MyParse.h
 	gcc -Wall -pedantic -std=c99 -g -c MyParse.c
