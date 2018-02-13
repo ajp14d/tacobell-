@@ -12,8 +12,7 @@ Division of Labor
 - Hunter Davis: Parsing
 
 How to Compile:
-- Using the Makefile 
-- type make
+- Using the Makefile, type 'make'. The executable will be named 
 
 How to clean: 
 -make clean 
@@ -49,5 +48,3 @@ Known Bugs:
 
 Unfinished Portions:
 
-
-Special Considerations:
