@@ -286,6 +286,8 @@ char** ExecuteExternalWithPipe(char** argv, int pipe_count, int background)
             MemFunc(argv4);
 		break;
         }
+
+	}
 }
 	free(cmd);
 	return argv;
