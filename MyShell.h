@@ -20,4 +20,8 @@
 
 void RunShell();
 
+void Limits(char** argv);
+
+void ETime(char** argv);
+
 #endif
