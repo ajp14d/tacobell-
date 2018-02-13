@@ -16,7 +16,7 @@ void RunShell()
 		
 		if ((argv[0] == NULL) || CheckForIOandPipeErrors(argv) || CheckForBackgroundErrors(argv))
 		{
-			// do nothing if empty arguments
+			
 		}
 	
 		else if (strcmp(argv[0], "exit") == 0)
@@ -28,18 +28,6 @@ void RunShell()
 		}
 		else if (strcmp(argv[0], "cd") == 0)
 		{
-			/*
-			if (GetSize(argv) <= 2)
-			{
-				if (GetSize(argv) == 2)
-					ChangeDirectory(argv[1]);
-				else
-					ChangeDirectory(getenv("HOME"));
-			}
-			else
-			{
-				printf("Too many arguments...\n");
-			}*/
 			
 			if (GetSize(argv) == 2)
 					ChangeDirectory(argv[1]);
@@ -56,7 +44,7 @@ void RunShell()
 			if (GetSize(argv) > 1)
 			{
 				argv = RemoveArr(argv, 0);
-				Limits(argv);
+				ioCmd(argv);
 			}
 		}
 		else if (strcmp(argv[0], "etime") == 0)
@@ -65,7 +53,7 @@ void RunShell()
 			{
 				
 				argv = RemoveArr(argv, 0);
-				ETime(argv);
+				etimeCmd(argv);
 			}
 		}
 		else if (ExecCheck(argv[0]))
@@ -817,7 +805,7 @@ void PrintPrompt()
 	printf("%s@%s: %s => ", user_out, machine_out, directory_out);
 }
 
-void Limits(char** argv)
+void ioCmd(char** argv)
 {
 	int childID;
 	int status;
@@ -872,7 +860,7 @@ void Limits(char** argv)
 	}
 }
 
-void ETime(char** argv)
+void etimeCmd(char** argv)
 {
 	int status;
 	struct timeval timeofday;
