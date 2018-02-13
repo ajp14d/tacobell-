@@ -19,41 +19,42 @@
 // any value >= 0 for background
 // char* cmd is the argv formatted to be pushed into the process queue
 
-void startMyShell();
+void RunShell();
 
-void dirChange(const char* dir);
+void ChangeDirectory(const char* dir);
 
-void theExtern(char** argv, int back, char* c);
 
-char** externIn(char** argv, int in, int back);
 
-char** externOut(char** argv, int out, int back);
+void ExecuteExternal(char** argv, int background, char* cmd);
 
-char** externPipe(char** argv, int numpipe, int back;
+char** ExecuteExternalWithInput(char** argv, int I_loc, int background);
+
+char** ExecuteExternalWithOutput(char** argv, int O_loc, int background);
+
+char** ExecuteExternalWithPipe(char** argv, int pipe_count, int background);
 
 // For file IO redirection
 // dir=0 for output redirect
 // dir=1 for input redirect
-void handleIO(char** argv, int dir, char* file, int back, char* c);
+void IORedirect(char** argv, int dir, char* filename, int background, char* cmd);
 
-int errorsPipeIO(char** argv);
+int CheckForIOandPipeErrors(char** argv);
 
-int errorsBackground(char** argv);
+int CheckForBackgroundErrors(char** argv);
 
-void displayPrompt();
+void PrintPrompt();
 
-void ioCmd(char** argv);
+void Limits(char** argv);
 
-void etimeCmd(char** argv);
+void ETime(char** argv);
 
 int checkZero(int tocheck);
 
 void KillZombies();
 
-
+void handlePipe(int pipe_count);
 
 #endif
-
 
 
 /*#ifndef _MYSHELL_H
