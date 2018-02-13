@@ -52,7 +52,6 @@ int checkZero(int tocheck);
 
 void KillZombies();
 
-void handlePipe(int pipe_count);
 
 #endif
 
