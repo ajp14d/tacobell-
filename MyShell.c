@@ -1,10 +1,6 @@
 #include "MyShell.h"
 
-int main()
-{
-	RunShell();
-	return 0;
-}
+
 
 
 void RunShell()
