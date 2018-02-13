@@ -19,30 +19,28 @@
 // any value >= 0 for background
 // char* cmd is the argv formatted to be pushed into the process queue
 
-void RunShell();
+void startMyShell();
 
-void ChangeDirectory(const char* dir);
+void dirChange(const char* dir);
 
+void theExtern(char** argv, int background, char* cmd);
 
+char** externIn(char** argv, int I_loc, int background);
 
-void ExecuteExternal(char** argv, int background, char* cmd);
+char** externOut(char** argv, int O_loc, int background);
 
-char** ExecuteExternalWithInput(char** argv, int I_loc, int background);
-
-char** ExecuteExternalWithOutput(char** argv, int O_loc, int background);
-
-char** ExecuteExternalWithPipe(char** argv, int pipe_count, int background);
+char** externPipe(char** argv, int pipe_count, int background);
 
 // For file IO redirection
 // dir=0 for output redirect
 // dir=1 for input redirect
-void IORedirect(char** argv, int dir, char* filename, int background, char* cmd);
+void handleIO(char** argv, int dir, char* filename, int background, char* cmd);
 
-int CheckForIOandPipeErrors(char** argv);
+int errorsPipeIO(char** argv);
 
-int CheckForBackgroundErrors(char** argv);
+int errorsBackground(char** argv);
 
-void PrintPrompt();
+void displayPrompt();
 
 void ioCmd(char** argv);
 
