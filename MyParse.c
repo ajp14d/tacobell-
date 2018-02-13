@@ -1,3 +1,4 @@
+
 #include "MyParse.h"
 #include "MyFunctions.h"
 #include<sys/stat.h>
@@ -30,55 +31,77 @@ char* GetInput()
 
 char* PWhitespace(char* line)                   
 {
+	char* ParseWhitespace(char* line)
+{
+	size_t it = 0;
+	int wspace_count = 0;
+	char cur_char = line[it];
 	
-  	int wspace_count = 0;      //whitespace_count
-	size_t cnt = 0;       //count iterator
-	char current_char = line[cnt];   
-	//flag to tell us if there is any trailing whitespace     
-	int trailing_wspace = 0;                
-	
-	
-	while ((current_char == '\t ' || current_char == '\n' || current_char == ' ') && (current_char != '\0'))  // delete leading whitespace
-	(    
-		current_char = line[++cnt];
+	// delete leading whitespace
+	while (cur_char != '\0' && (cur_char == ' ' || cur_char == '\t' || cur_char == '\n'))
+	{
+		cur_char = line[++it];
 		wspace_count++;
-	)
-	if (cnt > 0)    //if cnt index is more than 0
-		line = DelFunc(line, cnt - wspace_count, cnt - 1);         
+	}
+	if (it > 0)
+		line = DelFunc(line, it-wspace_count, it-1);
 	
-	cnt = 0;
+	// check for empty string
+	//if (strcmp(line,"")==0)
+	//	return line;
+	
+	// debug message
+	/*printf("Made it through leading whitespace and deleted %i characters...\n",
+		wspace_count);
+	printf(line);
+	printf("\n");*/
+	
+	it = 0;
 	wspace_count = 0;
 	
-	       
-	while (current_char != '\0')
-	(
-		current_char = line[cnt++];
-		while (current_char == '\n' || current_char == '\t' || current_char == ' ')
-		(
-			current_char = line[cnt++];
+	// need flag to determine if currently operating on
+	// trailing whitespace
+	int trailing_wspace = 0;
+	// delete intermediate extra whitespace
+	while (cur_char != '\0')
+	{
+		cur_char = line[it++];
+		while (cur_char == ' ' || cur_char == '\t' || cur_char == '\n')
+		{
 			wspace_count++;
-			if (current_char == '\0')
+			cur_char = line[it++];
+			if (cur_char == '\0')
 				trailing_wspace = 1;
-		)
-		if (wspace_count > 1) //if there is trailing whitespace
-		{
-			line = DelFunc(line, cnt - wspace_count - 1, cnt - 3);   //delete the whitespace 
-			cnt = cnt - (wspace_count - 1);   //update the count iterator if the array is changed through deletion
-		
 		}
-		else if(trailing_wspace == 1)  
+		if (trailing_wspace == 1)
 		{
-			
-			if (wspace_count > 0)   //if that whitespace is greater than 0
-				line = DelFunc(line, cnt - wspace_count - 1, cnt - 2);  //delete the whitespace   
+			if (wspace_count > 0)
+			{
+				line = DelFunc(line, it-wspace_count-1, it-2);
+			}
 			break;
 		}
-		wspace_count = 0;   //set white space counter back to 0
-	)
+		else if (wspace_count > 1)
+		{
+			line = DelFunc(line, it-wspace_count-1, it-3);
+			// must update iterator if array is changed through deletion
+			it = it - (wspace_count - 1);
+		}
+		wspace_count = 0;
+	}
 	
+	// debug message
+	/*printf("Made it through intermediate whitespace...\n",
+		wspace_count);
+	printf(line);
+	printf("%i",strlen(line));
+	printf("\n");*/
+	
+	// bug on return
+	// current guess is somewhere writing over the return address
+	// (buffer overflow)
 	return line;
 }
-
 
 // Converts the line input from the user into the array of command arguments.
 char** PArguments(char* input)            
@@ -123,25 +146,25 @@ char** PathResolve(char** args)
 	char* current_cmnd = args[0];     
 
 	
-	while(args[arg_it] != NULL)
+	while(args[argmn_it] != NULL)
 	{
-		//cur_type = IsCommand(args,arg_it);						[FIXED COMPILER WARNING UNUSED VAR]
-		//printf("%s	%i\n", args[arg_it], cur_type);
-		if (new_cmd == 1)
+		//cur_type = IsCommand(args,argmn_it);						[FIXED COMPILER WARNING UNUSED VAR]
+		//printf("%s	%i\n", args[argmn_it], cur_type);
+		if (new_cmnd == 1)
 		{
-			cmd_type = CmdCheck(args, arg_it);  
-			cur_cmd = args[arg_it];
-			cmd_it = arg_it;
-			new_cmd = 0;
+			cmnd_type = CmdCheck(args, argmn_it);  
+			current_cmnd = args[argmn_it];
+			cmnd_it = argmn_it;
+			new_cmnd = 0;
 		}
 		else
 		{
-			if ((strcmp(args[arg_it], "<") == 0) || 
-			    (strcmp(args[arg_it], ">") == 0) ||
-			    (strcmp(args[arg_it], "|") == 0))
+			if ((strcmp(args[argmn_it], "<") == 0) || 
+			    (strcmp(args[argmn_it], ">") == 0) ||
+			    (strcmp(args[argmn_it], "|") == 0))
 			    {
-				new_cmd = 1;
-				++arg_it;
+				new_cmnd = 1;
+				++argmn_it;
 				continue;
 			    }
 
@@ -149,70 +172,70 @@ char** PathResolve(char** args)
 		
 		
 		// etime and limits
-		if (cmd_type == 3)
+		if (cmnd_type == 3)
 		{
-			if ((strcmp(cur_cmd, "etime") == 0) || (strcmp(cur_cmd, "limits") == 0))
+			if ((strcmp(current_cmnd, "etime") == 0) || (strcmp(current_cmnd, "limits") == 0))
 			{
-				if (arg_it == (cmd_it + 1))
+				if (argmn_it == (cmnd_it + 1))
 				{
-					if (CharCheck(args[arg_it], '/') != 1)
+					if (CharCheck(args[argmn_it], '/') != 1)
 					{
-						args[arg_it] = PathFromEVar(args[arg_it]);
+						args[argmn_it] = PathFromEVar(args[argmn_it]);
 					}
 					else
 					{
-						args[arg_it] = PathMaker(args[arg_it]);
+						args[argmn_it] = PathMaker(args[argmn_it]);
 					}
 				}
 			}
 		}
 		// external commands
-		else if (cmd_type == 1)
+		else if (cmnd_type == 1)
 		{
-			if (arg_it == cmd_it)
+			if (argmn_it == cmnd_it)
 			{
-				if (CharCheck(args[arg_it], '/') == 1)
+				if (CharCheck(args[argmn_it], '/') == 1)
 				{
-					args[arg_it] = PathMaker(args[arg_it]);
+					args[argmn_it] = PathMaker(args[argmn_it]);
 				}
 				else
 				{
-					args[arg_it] = PathFromEVar(args[arg_it]);
+					args[argmn_it] = PathFromEVar(args[argmn_it]);
 				}
 			}
 		}
 
 		// cd
-		else if (cmd_type == 2)
+		else if (cmnd_type == 2)
 		{
 			
-			if (arg_it == (cmd_it + 1))
+			if (argmn_it == (cmnd_it + 1))
 			{
-				if (CharCheck(args[arg_it], '/'))
+				if (CharCheck(args[argmn_it], '/'))
 				{
-					if (args[arg_it][0] != '/' &&
-						args[arg_it][0] != '.' &&
-						args[arg_it][0] != '~')
+					if (args[argmn_it][0] != '/' &&
+						args[argmn_it][0] != '.' &&
+						args[argmn_it][0] != '~')
 					{
-						args[arg_it] = FPushString(args[arg_it], '/');
-						args[arg_it] = FPushString(args[arg_it], '.');
+						args[argmn_it] = FPushString(args[argmn_it], '/');
+						args[argmn_it] = FPushString(args[argmn_it], '.');
 					}	
 				}
 				else
 				{
-					if (!CharCheck(args[arg_it], '~') && !CharCheck(args[arg_it], '.'))
+					if (!CharCheck(args[argmn_it], '~') && !CharCheck(args[argmn_it], '.'))
 					{
-						args[arg_it] = FPushString(args[arg_it], '/');
-						args[arg_it] = FPushString(args[arg_it], '.');
+						args[argmn_it] = FPushString(args[argmn_it], '/');
+						args[argmn_it] = FPushString(args[argmn_it], '.');
 					}
 					
 				}
-				args[arg_it] = PathMaker(args[arg_it]);
+				args[argmn_it] = PathMaker(args[argmn_it]);
 			}
 		
 		}
 		
-		++arg_it;
+		++argmn_it;
 	}
 
 	return args;
@@ -312,6 +335,7 @@ char** ParseI(char* input)
 	
 	return split_args;
 }
+}
 
 /*
 void OnePipe(char** argv1, char** argv2, int background, char* cmd)
@@ -381,7 +405,6 @@ void OnePipe(char** argv1, char** argv2, int background, char* cmd)
 		printf("Error in fork1 of OnePipe()\n");
 	}
 }
-
 void TwoPipe(char** argv1, char** argv2, char** argv3, int background, char* cmd)
 {
 	int status;
@@ -478,7 +501,6 @@ void TwoPipe(char** argv1, char** argv2, char** argv3, int background, char* cmd
 		DisplayArgs(argv1);
 	}
 }
-
 void ThreePipe(char** argv1, char** argv2, char** argv3, char** argv4, int background, char* cmd)
 {
 	int status;
