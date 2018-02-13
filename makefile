@@ -1,5 +1,8 @@
-all:  MyParse.o MyFunctions.o  MyShell.o MyProcesses.o pipe.o
+all:  main.o MyParse.o MyFunctions.o  MyShell.o MyProcesses.o pipe.o
 	gcc -Wall -pedantic -std=c99 -g -o MyShell.x  MyParse.o MyFunctions.o  MyShell.o MyProcesses.o pipe.o
+
+main.o: main.c
+	gcc -Wall -pedantic -std=c99 -g -c main.c
 
 MyParse.o: MyParse.c MyParse.h
 	gcc -Wall -pedantic -std=c99 -g -c MyParse.c
