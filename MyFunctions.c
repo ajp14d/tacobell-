@@ -167,8 +167,8 @@ int CmdCheck(char** args, int a)
 		if (CmdVal(args[a]))
 			return 1;
 	}
-	else
-	{
+	
+	
 	if (strcmp(args[a], "cd") == 0)
 		return 2;
 
@@ -183,7 +183,7 @@ int CmdCheck(char** args, int a)
 		}
 		temp = cmdsInclude[++obj];
 	}
-	}
+	
 	return 0;
 
 }	
