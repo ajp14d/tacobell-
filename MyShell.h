@@ -12,6 +12,7 @@
 #include "MyFunctions.h"
 #include "MyParse.h"
 #include "MyProcesses.h"
+#include "pipe.h"
 
 // For each function in here
 // int background is a flag to run the process in the background (-1) for foreground
