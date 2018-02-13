@@ -938,58 +938,30 @@ void PrintPrompt()
 	printf("%s@%s: %s => ", user_out, machine_out, directory_out);
 }
 
-void Limits(char** argv)
+
+
+int checkZero(int tocheck)
 {
-	int childID;
-	int status;
+	if (tocheck == 0)
+		return 2;
+	else if (tocheck > 0)
+		return 1;
+	else
+		return 0;
+}
+	
 
-	int line_count = 0;
+void KillZombies() {
 
-	char file[256] = "/proc/";
-	char PID[256];
-	char location[256] = "/io";
-	char limit_string[256];
+    pid_t pid;
 
-	pid_t childPID = fork();
+    // Kill processes as long as we keep finding them
+    while ( ( pid = waitpid( -1, 0, WNOHANG ) )  )
+        
+        // No zombie processes are found
+        if ( pid == -1 || pid == 0 )
+            break;
 
-	switch(checkZero(childPID)){
-	case 2:
-	{
-		execv(argv[0], argv);
-		printf("Trouble executing: \n");
-		DisplayArgs(argv);
-		exit(1);
-		break;
-	}
-	case 1:
-	{
-		waitpid(childPID, &status, 0);
-		childID = getpid();
-		sprintf(PID, "%i", childID);
-		strcat(file, PID);
-		strcat(file, location);
-		FILE* limit_file;
-		limit_file = fopen(file, "r");
-
-		while(fgets(limit_string, sizeof(limit_string), limit_file))
-		{
-			if ((line_count == 3) || (line_count == 7) ||
-			    (line_count == 8) || (line_count == 12))
-			    {
-				printf("%s", limit_string);
-			    }
-			line_count++;
-		}
-		fclose(limit_file);
-		break;
-	}
-	case 0:
-	{
-		printf("Fork failed in Limits()\n");
-		exit(1);
-		break;
-	}
-	}
 }
 
 
