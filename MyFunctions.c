@@ -531,7 +531,7 @@ int CountStr(char** argv, const char* s)
 	}
 	return track;
 }
-
+/*
 void ChangeDirectory(const char* dir)
 {
 	int ret = chdir(dir);
@@ -965,7 +965,7 @@ void KillZombies() {
             break;
 
 }
-
+*/
 
 	
 
