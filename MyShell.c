@@ -98,3 +98,59 @@ void RunShell()
 	}
 }
 
+void ETime(char** argv)
+{
+	int status;
+	struct timeval timeofday;
+	gettimeofday(&timeofday, NULL);
+	double beginning_time=timeofday.tv_sec+(timeofday.tv_usec/1000000.0);
+
+	pid_t childPID = fork();
+
+	switch(checkZero(childPID)){
+	  case 2:
+	  {
+		execv(argv[0], argv);
+                printf("Trouble executing: \n");
+                DisplayArgs(argv);
+                exit(1);
+		break;
+	  }
+	  case 1:
+		waitpid(childPID, &status, 0);
+		break;
+	  case 0:
+		printf("Fork failed in ETime\n");
+		break;
+	}
+
+
+	gettimeofday(&timeofday, NULL);
+	double finishing_time=timeofday.tv_sec+(timeofday.tv_usec/1000000.0);
+	printf("Elapsed Time: %f\n", finishing_time-beginning_time);
+}
+
+int checkZero(int tocheck)
+{
+	if (tocheck == 0)
+		return 2;
+	else if (tocheck > 0)
+		return 1;
+	else
+		return 0;
+}
+	
+
+void KillZombies() {
+
+    pid_t pid;
+
+    // Kill processes as long as we keep finding them
+    while ( ( pid = waitpid( -1, 0, WNOHANG ) )  )
+        
+        // No zombie processes are found
+        if ( pid == -1 || pid == 0 )
+            break;
+
+}
+
