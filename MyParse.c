@@ -17,6 +17,7 @@ char* GetInput()
 
 char* PWhitespace(char* line)                   
 {
+	/*
   	int wspace_count = 0;      //whitespace_count
 	size_t cnt = 0;       //count iterator
 	char current_char = line[cnt];   
@@ -59,6 +60,59 @@ char* PWhitespace(char* line)
 		}
 		wspace_count = 0;   //set white space counter back to 0
 	)
+	
+	return line;
+	*/
+	
+		size_t it = 0;
+	int whitespace_count = 0;
+	char cur_char = line[it];
+	
+	// delete leading whitespace
+	while (cur_char != '\0' && (cur_char == ' ' || cur_char == '\t' || cur_char == '\n'))
+	{
+		cur_char = line[++it];
+		whitespace_count++;
+	}
+	if (it > 0)
+		line = DelFunc(line, it-whitespace_count, it-1);
+	
+	
+	
+	it = 0;
+	whitespace_count = 0;
+	
+	// need flag to determine if currently operating on
+	// trailing whitespace
+	int contains_trailing = 0;
+	// delete intermediate extra whitespace
+	while (cur_char != '\0')
+	{
+		cur_char = line[it++];
+		while (cur_char == ' ' || cur_char == '\t' || cur_char == '\n')
+		{
+			whitespace_count++;
+			cur_char = line[it++];
+			if (cur_char == '\0')
+				contains_trailing = 1;
+		}
+		if (contains_trailing == 1)
+		{
+			if (whitespace_count > 0)
+			{
+				line = DelFunc(line, it-whitespace_count-1, it-2);
+			}
+			break;
+		}
+		else if (whitespace_count > 1)
+		{
+			line = DelFunc(line, it-whitespace_count-1, it-3);
+			// must update iterator if array is changed through deletion
+			it = it - (whitespace_count - 1);
+		}
+		whitespace_count = 0;
+	}
+	
 	
 	return line;
 }
