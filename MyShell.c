@@ -526,7 +526,7 @@ void Limits(char** argv)
 	{
 		execv(argv[0], argv);
 		printf("Trouble executing: \n");
-		PrintArgVector(argv);
+		DisplayArgs(argv);
 		exit(1);
 		break;
 	}
@@ -575,7 +575,7 @@ void ETime(char** argv)
 	  {
 		execv(argv[0], argv);
                 printf("Trouble executing: \n");
-                PrintArgVector(argv);
+                DisplayArgs(argv);
                 exit(1);
 		break;
 	  }
