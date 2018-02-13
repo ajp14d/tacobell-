@@ -43,7 +43,7 @@ char* PWhitespace(char* line)
 		current_char = line[++cnt];
 		wspace_count++;
 	)
-	if (cnt !< 0)    //if cnt index is more than 0
+	if (cnt > 0)    //if cnt index is more than 0
 		line = DelFunc(line, cnt - wspace_count, cnt - 1);         
 	
 	cnt = 0;
@@ -127,7 +127,14 @@ char** PathResolve(char** args)
 	{
 		//cur_type = IsCommand(args,arg_it);						[FIXED COMPILER WARNING UNUSED VAR]
 		//printf("%s	%i\n", args[arg_it], cur_type);
-		if (new_cmd != 1)
+		if (new_cmd == 1)
+		{
+			cmd_type = CmdCheck(args, arg_it);  
+			cur_cmd = args[arg_it];
+			cmd_it = arg_it;
+			new_cmd = 0;
+		}
+		else
 		{
 			if ((strcmp(args[arg_it], "<") == 0) || 
 			    (strcmp(args[arg_it], ">") == 0) ||
@@ -137,13 +144,7 @@ char** PathResolve(char** args)
 				++arg_it;
 				continue;
 			    }
-		}
-		else
-		{
-			cmd_type = CmdCheck(args, arg_it);  
-			cur_cmd = args[arg_it];
-			cmd_it = arg_it;
-			new_cmd = 0;
+
 		}
 		
 		
