@@ -10,13 +10,15 @@
 #include<sys/stat.h>
 #include<fcntl.h>
 #include<sys/time.h>
+
+/*
 #include "MyProcesses.h"
 #include "MyFunctions.h"
 
 void OnePipe(char** argv1, char** argv2, int background, char* cmd);
 void TwoPipe(char** argv1, char** argv2, char** argv3, int background, char* cmd);
 void ThreePipe(char** argv1, char** argv2, char** argv3, char** argv4, int background, char* cmd);
-
+*/
 
 
 // Takes the input from the user and returns it as a dynamic character array
