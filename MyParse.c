@@ -6,13 +6,29 @@
 #include<string.h>
 
 char* GetInput()                         
-{                                            
+{       
+	size_t BUFFER_SIZE = 512;
+	char* input_string = (char*)calloc(BUFFER_SIZE, sizeof(char));
+	if(fgets(input_string, (int)BUFFER_SIZE, stdin))
+	{
+		return input_string;
+	}
+	else
+	{
+		return NULL;
+	}
+	
+	
+	
+	
+	/*                                     
 	size_t BUFF_SIZE = 255;    //user input will be no more than 255 characters
 	char* input_size = (char*)calloc(BUFF_SIZE, sizeof(char));
 	if(fgets(input_size, (int)BUFF_SIZE, stdin))                                  
 		return input_size;                       	                                                   
 	else                                        
 		return NULL;
+		*/
 }
 
 char* PWhitespace(char* line)                   
@@ -120,6 +136,42 @@ char* PWhitespace(char* line)
 // Converts the line input from the user into the array of command arguments.
 char** PArguments(char* input)            
 {
+	
+	size_t it = 0;
+	char c = input[it];
+	int token_count = 1;
+
+	while (c != '\0')
+	{
+		if ((c == ' ') || (c == '\n') || (c == '\t'))
+		{
+			token_count++;
+		}
+		c = input[++it];
+	}
+
+	int i = 0;
+
+	char** ret = (char**)calloc(token_count + 1, sizeof(char*));
+
+	char* tmp = strtok(input, " \n\t");
+
+	if (tmp != NULL)
+	{
+		ret[i] = (char*)calloc(strlen(tmp)+1, sizeof(char));
+		strcpy(ret[i], tmp);
+	}
+	for (i = 1; i < token_count; i++)
+	{
+		tmp = strtok(NULL, " \n\t");
+		ret[i] = (char*)calloc(strlen(tmp)+1, sizeof(char));
+		strcpy(ret[i], tmp);
+	}
+
+	ret[i] = NULL;
+
+	return ret;
+	/*
 	size_t cnt = 0;
 	char ch = input[cnt];
 	int tokn_c = 1, i = 0;                 //token_count  
@@ -151,6 +203,7 @@ char** PArguments(char* input)
 	}
 	retrn[i] = NULL;
 	return retrn;
+	*/
 }
 
 char** PathResolve(char** args)
@@ -330,6 +383,7 @@ char** PathResolve(char** args)
 
 char** Expand(char** args)       //Expands all environment variables in the command argument array  ///
 {      //argument iterator   //string iterator
+	/*
 	size_t argmn_it = 0, strng_it = 0;  
 	do 
 	{
@@ -370,10 +424,64 @@ char** Expand(char** args)       //Expands all environment variables in the comm
 		strng_it = 0;
 	}while (args[argmn_it] != NULL);
 	return args;
+	*/
+	
+	size_t arg_it = 0;
+	size_t str_it = 0;
+	//char* str = args[arg_it];
+
+	while (args[arg_it] != NULL)
+	{
+		char c = args[arg_it][str_it];
+
+		while (c != '\0')
+		{
+			if (c == '$')
+			{
+				char* env_var = (char*)calloc(2, sizeof(char));
+				size_t count = 1;
+				c = args[arg_it][++str_it];
+				if (c == '\0' || c == '$')
+				{
+					free(env_var);
+					// $ at end of string
+					// or two $ in a row
+					break;
+				}
+				env_var[0] = c;
+				env_var[1] = '\0';
+				c = args[arg_it][++str_it];
+				while (c != '/' && c != '\0' && c != '$')
+				{
+					env_var = BPushString(env_var, c);
+					c = args[arg_it][++str_it];
+					count++;
+				}
+				char* ret_env = getenv(env_var);
+				if (ret_env == NULL)
+				{
+					free(env_var);
+					// invalid env variable
+					break;
+				}
+				args[arg_it] = CharRep(args[arg_it], str_it - count - 1, str_it - 1, ret_env);
+				// must update iterator since string was changed
+				str_it = str_it + strlen(env_var);
+				free(env_var);
+			}
+			c = args[arg_it][++str_it];
+		}
+		str_it = 0;
+		++arg_it;
+	}
+
+	return args;
 }
 
 char** ParseI(char* input)                          
-{                                               //seperates and stores the values
+{    
+	/*
+	//seperates and stores the values
 	//first get rid of any whitespace
 	input = PWhitespace(input);     
 	char** split = PArguments(input);       //load it into the array of command arguments.
@@ -389,6 +497,33 @@ char** ParseI(char* input)
 	
 	free(input);    //must free all of the memory 
 	return split;      //return the newly parsed argument 
+	*/
+	
+	
+	
+		input = PWhitespace(input);
+	
+	char** split_args = PArguments(input);
+	
+	// check for leading '&' and remove if present
+	if (split_args[0] != NULL)
+	{
+		if (strcmp(split_args[0], "&") == 0)
+		{
+			split_args = RemoveArr(split_args, 0);
+		}
+	}
+	
+	split_args = Expand(split_args);
+	
+	split_args = PathResolve(split_args);
+	
+	// debug message
+	//PrintArgVector(split_args);
+	
+	free(input);
+	
+	return split_args;
 }
 
 
