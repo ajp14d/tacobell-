@@ -221,58 +221,6 @@ char** PathResolve(char** args)
 char** Expand(char** args)       //Expands all environment variables in the command argument array  ///
 {      //argument iterator   //string iterator
 	
-	size_t arg_it = 0;
-	size_t str_it = 0;
-	//char* str = args[arg_it];
-
-	while (args[arg_it] != NULL)
-	{
-		char c = args[arg_it][str_it];
-
-		while (c != '\0')
-		{
-			if (c == '$')
-			{
-				char* env_var = (char*)calloc(2, sizeof(char));
-				size_t count = 1;
-				c = args[arg_it][++str_it];
-				if (c == '\0' || c == '$')
-				{
-					free(env_var);
-					// $ at end of string
-					// or two $ in a row
-					break;
-				}
-				env_var[0] = c;
-				env_var[1] = '\0';
-				c = args[arg_it][++str_it];
-				while (c != '/' && c != '\0' && c != '$')
-				{
-					env_var = BPushString(env_var, c);
-					c = args[arg_it][++str_it];
-					count++;
-				}
-				char* ret_env = getenv(env_var);
-				if (ret_env == NULL)
-				{
-					free(env_var);
-					// invalid env variable
-					break;
-				}
-				args[arg_it] = CharRep(args[arg_it], str_it - count - 1, str_it - 1, ret_env);
-				// must update iterator since string was changed
-				str_it = str_it + strlen(env_var);
-				free(env_var);
-			}
-			c = args[arg_it][++str_it];
-		}
-		str_it = 0;
-		++arg_it;
-	}
-
-	return args;
-	
-	/*
 	size_t argmn_it = 0, strng_it = 0;  
 	do 
 	{
@@ -305,17 +253,15 @@ char** Expand(char** args)       //Expands all environment variables in the comm
 					break;
 				}
 				args[argmn_it] = CharRep(args[argmn_it], strng_it - counter - 1, strng_it - 1, retrn_environment);
-				strng_it = strng_it + strlen(environment_v);   //update iterator since string changed  				free(environment_v);
+				strng_it = strng_it + strlen(environment_v);   //update iterator since string changed 
+				free(environment_v);
 			}
 			ch = args[argmn_it][++strng_it];
 		}while (ch != '\0');    //while the character doesnt equal null
-		++argmn_it;
 		strng_it = 0;
+		++argmn_it;
 	}while (args[argmn_it] != NULL);
 	return args;
-	*/
-	
-	
 }
 
 char** ParseI(char* input)                          
