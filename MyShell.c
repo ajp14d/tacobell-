@@ -57,6 +57,7 @@ void RunShell()
 		{
 			if (GetSize(argv) > 1)
 			{
+				printf("HELLO\n");
 				argv = RemoveArr(argv, 0);
 				ETime(argv);
 			}
