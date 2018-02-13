@@ -29,7 +29,7 @@ char** externIn(char** argv, int in, int back);
 
 char** externOut(char** argv, int out, int back);
 
-char** externPipe(char** argv, int numpipe, int back;
+char** externPipe(char** argv, int numpipe, int back);
 
 // For file IO redirection
 // dir=0 for output redirect
