@@ -309,7 +309,7 @@ char** ParseI(char* input)
 	
 	
 	
-		input = PWhitespace(input);
+		input = ParseWhitespace(input);
 	
 	char** split_args = PArguments(input);
 	
