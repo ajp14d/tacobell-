@@ -7,9 +7,9 @@ Project Team Members
 - Hunter Davis
 
 Division of Labor
-- Holly Culver: Background Processing
-- Abby Perry: Piping
-- Hunter Davis: Parsing
+- Holly Culver: Background Processing, Function declarations, code testing, pipe testing, makefile declaration
+- Abby Perry: Piping, shell, process testing, code testing
+- Hunter Davis: Parsing, background processing, code testing
 
 How to Compile:
 - Using the Makefile, type 'make'. The executable will be named 
