@@ -333,7 +333,7 @@ char** ParseI(char* input)
 	
 	return split_args;
 }
-}
+
 
 /*
 void OnePipe(char** argv1, char** argv2, int background, char* cmd)
