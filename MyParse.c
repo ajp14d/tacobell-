@@ -429,7 +429,7 @@ char** ParseI(char* input)
 	return split_args;
 }
 
-
+/*
 void OnePipe(char** argv1, char** argv2, int background, char* cmd)
 {
 	int status;
@@ -734,3 +734,4 @@ void ThreePipe(char** argv1, char** argv2, char** argv3, char** argv4, int backg
 		DisplayArgs(argv1);
 	}
 }
+*/
