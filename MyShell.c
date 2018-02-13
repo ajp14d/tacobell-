@@ -14,7 +14,7 @@ void RunShell()
 	Init();
 	while (run)
 	{
-		//KillZombies();
+		KillZombies();
 		checkQueue();
 		PrintPrompt();
 		str = GetInput();
