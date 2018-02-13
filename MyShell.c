@@ -1,5 +1,11 @@
 #include "MyShell.h"
 
+int main()
+{
+	startMyShell();
+	return 0;
+}
+
 void startMyShell()
 {
 	int start = 1;
