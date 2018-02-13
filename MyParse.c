@@ -146,56 +146,25 @@ char** PathResolve(char** args)
 			new_cmd = 0;
 		}
 		
-		// cd
+		
+		// etime and limits
 		if (cmd_type == 3)
 		{
 			if ((strcmp(cur_cmd, "etime") == 0) || (strcmp(cur_cmd, "limits") == 0))
 			{
 				if (arg_it == (cmd_it + 1))
 				{
-					if (ContainsChar(args[arg_it], '/') == 1)
-					{
-						args[arg_it] = BuildPath(args[arg_it]);
-					}
-					else
+					if (ContainsChar(args[arg_it], '/') != 1)
 					{
 						args[arg_it] = PathEnvBuildPath(args[arg_it]);
 					}
-
-					//args[arg_it] = BuildPath(args[arg_it]);
+					else
+					{
+						args[arg_it] = BuildPath(args[arg_it]);
+					}
 				}
 			}
 		}
-
-		// etime and limits
-		else if (cmd_type == 2)
-		{
-			
-			if (arg_it == (cmd_it + 1))
-			{
-				if (!ContainsChar(args[arg_it], '/'))
-				{
-					if (!ContainsChar(args[arg_it], '~') && !ContainsChar(args[arg_it], '.'))
-					{
-						args[arg_it] = DynStrPushFront(args[arg_it], '/');
-						args[arg_it] = DynStrPushFront(args[arg_it], '.');
-					}
-				}
-				else
-				{
-					if (args[arg_it][0] != '/' &&
-						args[arg_it][0] != '.' &&
-						args[arg_it][0] != '~')
-					{
-						args[arg_it] = DynStrPushFront(args[arg_it], '/');
-						args[arg_it] = DynStrPushFront(args[arg_it], '.');
-					}
-				}
-				args[arg_it] = BuildPath(args[arg_it]);
-			}
-		
-		}
-
 		// external commands
 		else if (cmd_type == 1)
 		{
@@ -211,7 +180,36 @@ char** PathResolve(char** args)
 				}
 			}
 		}
-	
+
+		// cd
+		else if (cmd_type == 2)
+		{
+			
+			if (arg_it == (cmd_it + 1))
+			{
+				if (ContainsChar(args[arg_it], '/'))
+				{
+					if (args[arg_it][0] != '/' &&
+						args[arg_it][0] != '.' &&
+						args[arg_it][0] != '~')
+					{
+						args[arg_it] = DynStrPushFront(args[arg_it], '/');
+						args[arg_it] = DynStrPushFront(args[arg_it], '.');
+					}	
+				}
+				else
+				{
+					if (!ContainsChar(args[arg_it], '~') && !ContainsChar(args[arg_it], '.'))
+					{
+						args[arg_it] = DynStrPushFront(args[arg_it], '/');
+						args[arg_it] = DynStrPushFront(args[arg_it], '.');
+					}
+					
+				}
+				args[arg_it] = BuildPath(args[arg_it]);
+			}
+		
+		}
 		
 		++arg_it;
 	}
