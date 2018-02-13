@@ -64,22 +64,22 @@ void startMyShell()
 			int numpipe = CountStr(argv, "|");
 			if (in != -1)
 			{
-				argv = externIn(argv, I_loc, background);
+				argv = externIn(argv, in, back);
 			}
 			else if (out != -1)
 			{
-				argv = externOut(argv, O_loc, background);
+				argv = externOut(argv, out, back);
 			}
 			else if (numpipe > 0)
 			{
-				argv = externPipe(argv, pipe_count, background);
+				argv = externPipe(argv, numpipe, back);
 			}
 			else
 			{
 				char* c = Convert(argv);
 				if (back != -1)
 				{
-					argv = RemoveArr(argv, background);
+					argv = RemoveArr(argv, back);
 				}
 				theExtern(argv, back, c);
 				free(c);
@@ -135,7 +135,7 @@ void theExtern(char** argv, int back, char* c)
 		default:
 		{
 			waitpid(pid, &status, WNOHANG);
-			handleQueue(newPro(pid, -1, cmd));
+			handleQueue(newPro(pid, -1, c));
 			break;
 		}
 		case -1:
@@ -250,7 +250,7 @@ char** externPipe(char** argv, int numpipe, int back)
 			{
 				waitpid(c2PID, &status, WNOHANG);
 				waitpid(c1PID, &status, WNOHANG);
-				handleQueue(newPro(c1PID, c2PID, cmd));
+				handleQueue(newPro(c1PID, c2PID, c));
 			}
 			else
 			{
@@ -621,7 +621,7 @@ void handleIO(char** argv, int dir, char* file, int back, char* c)
 			default:
 			{
 				waitpid(pid, &status, WNOHANG);
-				handleQueue(newPro(pid, -1, cmd));
+				handleQueue(newPro(pid, -1, c));
 				break;
 			}
 			case -1:
