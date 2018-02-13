@@ -675,7 +675,7 @@ void handleIO(char** argv, int dir, char* file, int back, char* c)
 			default:
 			{
 				waitpid(pid, &status, WNOHANG);
-				handleQueue(newPro(pid, -1, cmd));
+				handleQueue(newPro(pid, -1, c));
 				break;
 			}
 			case -1:
