@@ -18,6 +18,7 @@ void RunShell()
 		{
 			// do nothing if empty arguments
 		}
+	
 		else if (strcmp(argv[0], "exit") == 0)
 		{
 			MemFunc(argv);
@@ -27,6 +28,7 @@ void RunShell()
 		}
 		else if (strcmp(argv[0], "cd") == 0)
 		{
+			/*
 			if (GetSize(argv) <= 2)
 			{
 				if (GetSize(argv) == 2)
@@ -37,7 +39,17 @@ void RunShell()
 			else
 			{
 				printf("Too many arguments...\n");
-			}
+			}*/
+			
+			if (GetSize(argv) == 2)
+					ChangeDirectory(argv[1]);
+			else if (GetSize(argv) < 2)
+					ChangeDirectory(getenv("HOME"));
+			else	
+				printf("There are too many arguments after cd\n");
+			
+			
+			
 		}
 		else if (strcmp(argv[0], "io") == 0)
 		{
@@ -49,7 +61,6 @@ void RunShell()
 		}
 		else if (strcmp(argv[0], "etime") == 0)
 		{
-			printf("HELLO\n");
 			if (GetSize(argv) > 1)
 			{
 				
