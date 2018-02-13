@@ -836,7 +836,7 @@ void ioCmd(char** argv)
 		FILE* iofile;
 		iofile = fopen(file, "r");
 
-		while(fgets(iostr, sizeof(iostr), iostr))
+		while(fgets(iostr, sizeof(iostr), iofile))
 		{
 			if ((numline == 3) || (numline == 7) ||
 			    (numline == 8) || (numline == 12))
