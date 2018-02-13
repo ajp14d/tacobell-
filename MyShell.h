@@ -44,9 +44,9 @@ int CheckForBackgroundErrors(char** argv);
 
 void PrintPrompt();
 
-void Limits(char** argv);
+void ioCmd(char** argv);
 
-void ETime(char** argv);
+void etimeCmd(char** argv);
 
 int checkZero(int tocheck);
 
