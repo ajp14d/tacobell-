@@ -105,7 +105,7 @@ int CountStr(char** argv, const char* s);
 void ChangeDirectory(const char* dir);
 
 
-/*
+
 void ExecuteExternal(char** argv, int background, char* cmd);
 
 char** ExecuteExternalWithInput(char** argv, int I_loc, int background);
@@ -124,14 +124,14 @@ int CheckForIOandPipeErrors(char** argv);
 int CheckForBackgroundErrors(char** argv);
 
 void PrintPrompt();
-
+/*
 void Limits(char** argv);
 
 void ETime(char** argv);
-
+*/
 int checkZero(int tocheck);
 
 void KillZombies();
-*/
+
 
 #endif
